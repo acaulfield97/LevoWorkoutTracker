@@ -13,7 +13,7 @@ public class CurrentUserService {
 
     private final UserRepository userRepository;
 
-    public String getUsername(Authentication authentication) {
+    public User getCurrentUser(Authentication authentication) {
         if (authentication == null) return null;
 
         Object principal = authentication.getPrincipal();
@@ -35,7 +35,7 @@ public class CurrentUserService {
         final String finalEmail = email;
         final String finalNickname = nickname;
 
-        User user = userRepository.findByAuth0Id(auth0Id)
+        return userRepository.findByAuth0Id(auth0Id)
                 .orElseGet(() -> {
                     User newUser = new User();
                     newUser.setAuth0Id(finalAuth0Id);
@@ -43,7 +43,5 @@ public class CurrentUserService {
                     newUser.setUsername(finalNickname);
                     return userRepository.save(newUser);
                 });
-
-        return user.getUsername();
     }
 }
