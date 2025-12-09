@@ -12,7 +12,7 @@ public class ExerciseController {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
-    @PostMapping("/exercise")
+    @PostMapping("/add-exercise")
     public RedirectView addExercise(Exercise exercise){
 
 

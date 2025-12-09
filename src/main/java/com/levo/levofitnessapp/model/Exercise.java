@@ -22,10 +22,10 @@ public class Exercise {
 //    foreign key for category - can't be empty
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Long category_id;
+    private Category category;
 
 //    user that created the exercise - can be empty
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
-    private Long user_id;
+    private User user_id;
 }

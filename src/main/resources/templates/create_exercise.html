@@ -6,29 +6,37 @@
 </head>
 <body>
 
-<h1>Add an exercise</h1>
-<form action="" method="post">
-
+<!--<h1>Add an exercise</h1>-->
+<form th:action="@{/exercise/select-exercise}" method="get">
     <div class="form-group">
         <label for="category-select">Category</label>
-        <select id="category-select" name="category_id" required>
+        <select id="category-select" name="category_id" required onchange="this.form.submit();">
             <option value="">-- Select a category --</option>
-            <option value="legs">Legs</option>
-            <option value="arms">Arms</option>
-            <option value="back">Back</option>
+            <option th:each="category:${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.category_name}"
+                    th:selected="${selectedCategoryId} == ${category.id}"
+                    ></option>
         </select>
     </div>
+</form>
+
+
+<form method="post">
 
     <div class="form-group">
         <label for="exercise-select">Exercise</label>
         <select id="exercise-select" name="exercise_id" required>
             <option value="">-- Select an exercise --</option>
+            <option th:each="exercise:${exercises}"
+                    th:value="${exercise.exercise_name}"
+                    th:text="${exercise.exercise_name}" ></option>
         </select>
     </div>
 
-    <button th:action="/exercise" type="submit">Add exercise</button>
-
 </form>
+
+<!--    <button th:action="/exercise" type="submit">Add exercise</button>-->
 
 </body>
 </html>
