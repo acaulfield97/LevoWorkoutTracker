@@ -57,6 +57,8 @@ public class ExerciseController {
         return modelAndView;
     }
 
+
+
     // doesn't do anything yet
     // for a user to add a new exercise
     @PostMapping("/add-exercise")
