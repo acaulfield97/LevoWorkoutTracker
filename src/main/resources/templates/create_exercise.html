@@ -46,16 +46,24 @@
         </select>
     </div>
 
-    <!-- Continue button -->
+    </form>
+
+<form method="post" th:action="@{/workout-exercise}">
+    <input type="hidden" name="exerciseId" th:value="${selectedExerciseId}">
+
+    <!-- Add exercise button -->
     <!-- button is disabled if no exercise is selected -->
     <button type="submit"
-            formaction="/exercise/exercise-set"
-            th:disabled="${selectedExerciseId} == null">
-        Continue
+            th:disabled="${selectedExerciseId == null}">
+        Add Exercise
     </button>
 
 </form>
 
+<!-- Finish adding exercises button -->
+<form th:action="@{/}" method="get">
+    <button type="submit">Finish Adding Exercises</button>
+</form>
 </body>
 </html>
 
