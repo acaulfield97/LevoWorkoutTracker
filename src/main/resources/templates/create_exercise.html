@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Exercise</title>
+</head>
+<body>
+
+<h2>Select an exercise</h2>
+
+<!-- all one form = cleaner -->
+<form method="get" th:action="@{/exercise}">
+
+    <!-- Select category dropdown -->
+    <div class="form-group">
+        <label for="category-select">Category</label>
+        <select id="category-select"
+                name="categoryId"
+                required
+                onchange="this.form.submit();">
+
+            <option value="">-- Select a category --</option>
+
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.category_name}"
+                    th:selected="${selectedCategoryId} == ${category.id}">
+            </option>
+        </select>
+    </div>
+
+    <!-- Select exercise dropdown -->
+    <div class="form-group">
+        <label for="exercise-select">Exercise</label>
+        <select id="exercise-select" name="exerciseId"
+                th:disabled="${#lists.isEmpty(exercises)}"
+                onchange="this.form.submit();">
+
+            <option value="">-- Select an exercise --</option>
+
+            <option th:each="exercise : ${exercises}"
+                    th:value="${exercise.id}"
+                    th:text="${exercise.exercise_name}"
+                    th:selected="${selectedExerciseId} == ${exercise.id}">
+            </option>
+        </select>
+    </div>
+
+    <!-- Continue button -->
+    <!-- button is disabled if no exercise is selected -->
+    <button type="submit"
+            formaction="/exercise/exercise-set"
+            th:disabled="${selectedExerciseId} == null">
+        Continue
+    </button>
+
+</form>
+
+</body>
+</html>
+

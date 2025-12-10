@@ -10,6 +10,16 @@
 <div class="container mt-4">
     <h1>Welcome to Levo!</h1>
     <p>Track your workouts and exercises.</p>
+
+    <!-- No active workout -> show START WORKOUT -->
+    <form th:if="${activeWorkout == null}" method="post" th:action="@{/workout/start}">
+        <button type="submit" class="btn btn-primary">START WORKOUT</button>
+    </form>
+
+    <!-- Active workout -> show END WORKOUT -->
+    <form th:if="${activeWorkout != null}" method="post" th:action="@{/workout/finish}">
+        <button type="submit" class="btn btn-primary">FINISH WORKOUT</button>
+    </form>
 </div>
 </body>
 </html>
