@@ -21,7 +21,12 @@
         </div>
 
         <!-- Notes section until we have a variable for the types of workout selected -->
-        <p th:text="${workout.notes}" class="notes"></p>
+        <strong>Categories:</strong>
+        <ul>
+            <li th:each="we : ${workout.exercises}">
+                <span th:text="${we.exercise.category.name}"></span>
+            </li>
+        </ul>
 
         <div class="options">
             <button class="btn btn-primary">Update</button>
