@@ -1,5 +1,6 @@
 package com.levo.levofitnessapp.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.levo.levofitnessapp.model.Exercise;
 import com.levo.levofitnessapp.model.Set;
 import com.levo.levofitnessapp.model.WorkoutExercise;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/set")
@@ -27,9 +30,15 @@ public class SetController {
 
     @GetMapping("")
     public ModelAndView setPage(@RequestParam Long workoutExerciseId) {
-        ModelAndView modelAndView = new ModelAndView("/create_sets");
 
+        ModelAndView modelAndView = new ModelAndView("/create_sets");
         modelAndView.addObject("workoutExerciseId", workoutExerciseId);
+
+        WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
+                .orElseThrow(() -> new RuntimeException("No workout exercise found"));
+
+        Iterable<Set> sets = setRepository.findByWorkoutExerciseId(workoutExercise);
+        modelAndView.addObject("sets", sets);
 
         return modelAndView;
     }
@@ -56,4 +65,7 @@ public class SetController {
 
         return new ModelAndView("redirect:/set?workoutExerciseId=" + workoutExercise.getId());
     }
+
+
+
 }
