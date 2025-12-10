@@ -13,17 +13,21 @@
 </div>
 
 <div class="workout-feed">
-    <div th:each="workout : ${workout}" class="workout">
+    <div th:each="workout : ${workouts}" class="workout">
+
         <div class="workout-header">
-            <span th:text="${userMap.get(post.userId).username}" class="post-author"></span>
-            <span th:text="${workout.postedDate}" class="post-timestamp"></span>
+            <!-- Displays date for now -->
+            <span th:text="${#temporals.format(workout.startedAt, 'yyyy-MM-dd')}" class="workout-date"></span>
         </div>
-        <p th:text="${post.content}" class="post-content"></p>
-        <!-- <div th:each="workout : ${workout}" class="workout"> this should be the subclass workouts -->
+
+        <!-- Notes section until we have a variable for the types of workout selected -->
+        <p th:text="${workout.notes}" class="notes"></p>
+
         <div class="options">
-            <button type="upgrade" class="btn btn-primary" th:text="Update"></button>
-            <button type="delete" class="btn btn-primary" th:text="Delete"></button>
+            <button class="btn btn-primary">Update</button>
+            <button class="btn btn-danger">Delete</button>
         </div>
+
     </div>
 </div>
 </body>
