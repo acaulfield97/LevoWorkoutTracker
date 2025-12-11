@@ -37,6 +37,10 @@ public class SetController {
         WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
                 .orElseThrow(() -> new RuntimeException("No workout exercise found"));
 
+        // Add exercise name
+        Exercise exercise = workoutExercise.getExerciseId();
+        modelAndView.addObject("exerciseName", exercise.getExercise_name());
+
         Iterable<Set> sets = setRepository.findByWorkoutExerciseId(workoutExercise);
         modelAndView.addObject("sets", sets);
 
