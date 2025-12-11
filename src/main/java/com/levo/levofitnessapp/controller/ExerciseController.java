@@ -5,6 +5,7 @@ import com.levo.levofitnessapp.model.Exercise;
 import com.levo.levofitnessapp.model.Workout;
 import com.levo.levofitnessapp.repository.CategoryRepository;
 import com.levo.levofitnessapp.repository.ExerciseRepository;
+import com.levo.levofitnessapp.repository.WorkoutExerciseRepository;
 import com.levo.levofitnessapp.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,14 +26,17 @@ public class ExerciseController {
     private final ExerciseRepository exerciseRepository;
     private final CategoryRepository categoryRepository;
     private final WorkoutRepository workoutRepository;
+    private final WorkoutExerciseRepository workoutExerciseRepository;
 
     @Autowired
     public ExerciseController(ExerciseRepository exerciseRepository,
                               CategoryRepository categoryRepository,
-                              WorkoutRepository workoutRepository) {
+                              WorkoutRepository workoutRepository,
+                              WorkoutExerciseRepository workoutExerciseRepository) {
         this.exerciseRepository = exerciseRepository;
         this.categoryRepository = categoryRepository;
         this.workoutRepository = workoutRepository;
+        this.workoutExerciseRepository = workoutExerciseRepository;
     }
 
     @GetMapping("")
@@ -56,6 +60,8 @@ public class ExerciseController {
 
         return modelAndView;
     }
+
+
 
     // doesn't do anything yet
     // for a user to add a new exercise

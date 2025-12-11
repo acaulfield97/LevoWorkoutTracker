@@ -20,6 +20,10 @@
     <form th:if="${activeWorkout != null}" method="post" th:action="@{/workout/finish}">
         <button type="submit" class="btn btn-primary">FINISH WORKOUT</button>
     </form>
+
+    <form th:if="${activeWorkout != null}" method="get" th:action="@{/exercise}">
+        <button type="submit" class="btn btn-primary">ADD ANOTHER EXERCISE</button>
+    </form>
 </div>
 </body>
 </html>
