@@ -3,6 +3,8 @@ package com.levo.levofitnessapp.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // instances of this class map to DB records
 @Entity
@@ -28,5 +30,8 @@ public class Workout {
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
     private String notes;
+
+    @OneToMany(mappedBy = "workout")
+    private List<WorkoutExercise> workoutExercises = new ArrayList<>();
 
 }

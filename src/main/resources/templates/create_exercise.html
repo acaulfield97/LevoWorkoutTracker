@@ -23,7 +23,7 @@
 
             <option th:each="category : ${categories}"
                     th:value="${category.id}"
-                    th:text="${category.category_name}"
+                    th:text="${category.categoryName}"
                     th:selected="${selectedCategoryId} == ${category.id}">
             </option>
         </select>
@@ -40,7 +40,7 @@
 
             <option th:each="exercise : ${exercises}"
                     th:value="${exercise.id}"
-                    th:text="${exercise.exercise_name}"
+                    th:text="${exercise.exerciseName}"
                     th:selected="${selectedExerciseId} == ${exercise.id}">
             </option>
         </select>

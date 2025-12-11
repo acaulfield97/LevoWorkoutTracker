@@ -23,8 +23,8 @@
         <!-- Notes section until we have a variable for the types of workout selected -->
         <strong>Categories:</strong>
         <ul>
-            <li th:each="we : ${workout.exercises}">
-                <span th:text="${we.exercise.category.name}"></span>
+            <li th:each="we : ${workout.workoutExercises}">
+                <span th:text="${we.exercise.category.categoryName}"></span>
             </li>
         </ul>
 
