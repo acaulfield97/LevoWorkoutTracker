@@ -16,11 +16,11 @@ public class WorkoutExercise {
 
     @ManyToOne
     @JoinColumn(name = "workout_session_id")
-    private Workout workoutSessionId;
+    private Workout workout;
 
     @ManyToOne
     @JoinColumn(name = "exercise_id")
-    private Exercise exerciseId;
+    private Exercise exercise;
 
     private String notes;
 
