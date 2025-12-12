@@ -10,6 +10,28 @@
 
 <div th:replace="fragments/navbar :: navbar"></div>
 
+<div th:if="${!#lists.isEmpty(workoutExercises)}">
+
+    <h2>Current workout</h2>
+
+    <ul class="list-group">
+        <li class="list-group-item" th:each="workoutExercise : ${workoutExercises}">
+            <strong th:text="${workoutExercise.exercise.exerciseName}"></strong>
+
+            <!--Show sets-->
+            <ul>
+                <li th:each="set: ${setsMap[workoutExercise.id]}">
+                    <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
+                    <span th:text="${set.weightKg} + ' kg'"></span>
+                    <span th:text="' x ' + ${set.reps} + ' reps'"></span>
+                </li>
+            </ul>
+
+        </li>
+    </ul>
+
+</div>
+
 <h2>Select an exercise</h2>
 
 <!-- all one form = cleaner -->
@@ -59,7 +81,7 @@
     <!-- button is disabled if no exercise is selected -->
     <button type="submit"
             th:disabled="${selectedExerciseId == null}">
-        Add Exercise
+        Start Exercise
     </button>
 
 </form>
