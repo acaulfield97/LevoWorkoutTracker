@@ -13,8 +13,14 @@
 
 <h2 th:text="${exerciseName}"></h2>
 
+<form th:action="@{/exercise-history}" method="get">
+    <input type="hidden" name="exerciseId" th:value="${exerciseId}">
+    <button type="submit">Exercise History</button>
+</form>
+
 <form method="post" th:action="@{/set}">
     <input type="hidden" name="workoutExerciseId" th:value="${workoutExerciseId}">
+    <input type="hidden" name="exerciseId" th:value="${exerciseId}">
 
     <div class="form-group">
         <label for="weightKg">Weight (kg)</label>

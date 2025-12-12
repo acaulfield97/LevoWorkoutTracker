@@ -40,6 +40,7 @@ public class SetController {
         // Add exercise name
         Exercise exercise = workoutExercise.getExercise();
         modelAndView.addObject("exerciseName", exercise.getExerciseName());
+        modelAndView.addObject("exerciseId", exercise.getId());
 
         Iterable<Set> sets = setRepository.findByWorkoutExerciseId(workoutExercise);
         modelAndView.addObject("sets", sets);
@@ -49,6 +50,7 @@ public class SetController {
 
     @PostMapping("")
     public ModelAndView saveSet(@RequestParam Long workoutExerciseId,
+                                @RequestParam Long exerciseId,
                                 @RequestParam int weightKg,
                                 @RequestParam int reps){
 
@@ -67,7 +69,10 @@ public class SetController {
 
         setRepository.save(set);
 
-        return new ModelAndView("redirect:/set?workoutExerciseId=" + workoutExercise.getId());
+        return new ModelAndView(
+                "redirect:/set?workoutExerciseId=" + workoutExercise.getId()
+                        + "&exerciseId=" + workoutExercise.getExercise().getId()
+        );
     }
 
 

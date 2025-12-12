@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+
+    <body>
+        <div th:replace="fragments/navbar :: navbar"></div>
+
+        <div class="container mt-4">
+            <h1><span th:text="${exercise.exerciseName}"></span> history</h1>
+        </div>
+
+        <div class="exercise-history-feed">
+            <div th:each="we : ${workoutExercises}" class="exercise">
+
+                <div class="exercise-header">
+                    <div th:text="${#temporals.format(we.workout.startedAt, 'dd MMM yyyy HH:mm')}"></div>
+                </div>
+
+                <strong>Sets:</strong>
+                <ul>
+                    <li th:each="s : ${we.sets}">
+                        <span th:text="${s.setNumber}"></span>.
+                        <span th:text="${s.weightKg}"></span> kg ×
+                        <span th:text="${s.reps}"></span>
+                    </li>
+                </ul>
+
+                <p th:if="${#lists.isEmpty(we.sets)}">No sets recorded.</p>
+            </div>
+        </div>
+
+
+
+    </body>
+
+</html>
