@@ -30,7 +30,9 @@
 
         <div class="options">
             <button class="btn btn-primary">Update</button>
-            <button class="btn btn-danger">Delete</button>
+            <form th:action="@{'/history/delete/' + ${workout.id}}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
         </div>
 
     </div>
