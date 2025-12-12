@@ -22,6 +22,14 @@ public class WorkoutHistoryController {
         model.addAttribute("workouts", workoutRepository.findAll());
         return "WorkoutHistoryPage";
     }
+
+    @PostMapping("/delete/{id}")
+    public RedirectView deleteWorkout(@PathVariable Long id) {
+
+        workoutRepository.findById(id).ifPresent(workoutRepository::delete);
+
+        return new RedirectView("/history");
+    }
 }
 
 
