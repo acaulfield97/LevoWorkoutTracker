@@ -1,13 +1,17 @@
 package com.levo.levofitnessapp.controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
 public class StaticPageController {
 
     @GetMapping("/")
-    public ModelAndView landingPage() {
-        return new ModelAndView("/LandingPage");
+    public String landingPage(Model model) {
+        model.addAttribute("activePage", "home");
+        return "LandingPage";  // loads templates/LandingPage.html
+
+
     }
 }
