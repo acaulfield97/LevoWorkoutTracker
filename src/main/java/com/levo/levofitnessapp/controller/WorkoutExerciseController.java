@@ -48,8 +48,8 @@ public class WorkoutExerciseController {
         // Hibernate only stores their primary keys in the database.
         // Give Hibernate full objects, and it looks at the @JoinColumn (e.g. @JoinColumn(name = "workout_session_id)
         // This tells Hibernate to store the primary key of the Workout object inside the workout_session_id column in table
-        workoutExercise.setExerciseId(exercise);
-        workoutExercise.setWorkoutSessionId(workout);
+        workoutExercise.setExercise(exercise);
+        workoutExercise.setWorkout(workout);
 
         workoutExerciseRepository.save(workoutExercise);
 

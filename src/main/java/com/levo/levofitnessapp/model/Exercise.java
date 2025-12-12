@@ -17,7 +17,7 @@ public class Exercise {
     private Long id;
 
     @Column(name = "exercise_name")
-    private String exercise_name;
+    private String exerciseName;
 
 //    foreign key for category - can't be empty
     @ManyToOne
@@ -27,5 +27,5 @@ public class Exercise {
 //    user that created the exercise - can be empty
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
-    private User user_id;
+    private User user;
 }

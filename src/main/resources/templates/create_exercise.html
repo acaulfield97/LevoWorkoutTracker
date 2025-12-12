@@ -18,6 +18,27 @@
 
 
 <div class="container mt-5">
+<div th:if="${!#lists.isEmpty(workoutExercises)}">
+
+    <h2>Current workout</h2>
+
+    <ul class="list-group">
+        <li class="list-group-item" th:each="workoutExercise : ${workoutExercises}">
+            <strong th:text="${workoutExercise.exercise.exerciseName}"></strong>
+
+            <!--Show sets-->
+            <ul>
+                <li th:each="set: ${setsMap[workoutExercise.id]}">
+                    <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
+                    <span th:text="${set.weightKg} + ' kg'"></span>
+                    <span th:text="' x ' + ${set.reps} + ' reps'"></span>
+                </li>
+            </ul>
+
+        </li>
+    </ul>
+
+</div>
 
     <h2 class="text-center mb-3 fw-bold">Select an Exercise</h2>
     <p class="text-center text-muted mb-4">Choose a category and exercise to continue</p>
@@ -40,7 +61,7 @@
                         <option value="">Select a category</option>
                         <option th:each="category : ${categories}"
                                 th:value="${category.id}"
-                                th:text="${category.category_name}"
+                                th:text="${category.categoryName}"
                                 th:selected="${selectedCategoryId} == ${category.id}">
                         </option>
                     </select>
@@ -57,7 +78,7 @@
                         <option value="">Select an exercise</option>
                         <option th:each="exercise : ${exercises}"
                                 th:value="${exercise.id}"
-                                th:text="${exercise.exercise_name}"
+                                th:text="${exercise.exerciseName}"
                                 th:selected="${selectedExerciseId} == ${exercise.id}">
                         </option>
                     </select>
@@ -72,7 +93,7 @@
             <button type="submit"
                     class="btn btn-primary btn-lg w-100 rounded-3 mb-3"
                     th:disabled="${selectedExerciseId == null}">
-                Add Exercise
+                Start Exercise
             </button>
         </form>
 
@@ -89,4 +110,4 @@
 </div>
 
 </body>
-
+</html>

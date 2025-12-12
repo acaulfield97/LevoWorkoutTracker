@@ -57,7 +57,7 @@
 <div th:replace="fragments/mobile_navbar :: mobileNavbar('exercise')"></div>
 
 <div class="container mt-4" style="max-width: 500px">
-    <h2 class="text-center fw-bold mb-3">Add a Set</h2>
+    <h2 class="text-center fw-bold mb-3" th:text="${exerciseName}"></h2>
     <p class="text-center text-muted mb-4">Track progress one set at a time.</p>
 
     <!-- Add Set Form -->
@@ -123,8 +123,6 @@
     </form>
 </div>
 </body>
-
 </html>
-
 
 
