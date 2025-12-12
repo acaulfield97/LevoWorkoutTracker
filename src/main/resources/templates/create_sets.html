@@ -60,11 +60,22 @@
     <h2 class="text-center fw-bold mb-3" th:text="${exerciseName}"></h2>
     <p class="text-center text-muted mb-4">Track progress one set at a time.</p>
 
+    <form th:action="@{/exercise-history}" method="get" class="mb-3">
+        <input type="hidden" name="exerciseId" th:value="${exerciseId}">
+        <button type="submit" class="btn btn-outline-primary w-100 btn-lg d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-clock-history"></i>
+            Exercise History
+        </button>
+    </form>
+
+
     <!-- Add Set Form -->
     <div class="card-modern mb-4">
-        <form method="post"
-              th:action="@{'/set?workoutExerciseId=' + ${workoutExerciseId}}">
-        <input type="hidden" name="workoutExerciseId" th:value="${workoutExerciseId}" />
+
+        <form method="post" th:action="@{'/set?workoutExerciseId=' + ${workoutExerciseId}}">
+
+            <input type="hidden" name="workoutExerciseId" th:value="${workoutExerciseId}">
+            <input type="hidden" name="exerciseId" th:value="${exerciseId}">
 
             <!-- Weight Input -->
             <div class="mb-3 input-icon-wrapper">
@@ -88,6 +99,7 @@
             <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">
                 Add Set
             </button>
+
         </form>
     </div>
 
@@ -121,6 +133,7 @@
             Finish Adding Sets
         </button>
     </form>
+
 </div>
 </body>
 </html>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Workout History</title>
+    <title>Exercise History</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
@@ -13,7 +14,9 @@
           min-height: 100vh;
         }
 
-        .page-shell { max-width: 720px; }
+        .page-shell {
+          max-width: 720px;
+        }
 
         .card-modern {
           background: rgba(255, 255, 255, 0.9);
@@ -23,18 +26,20 @@
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         }
 
-        .page-title {
+        .history-title {
           font-weight: 800;
           letter-spacing: -0.02em;
           margin-bottom: .25rem;
         }
 
-        .page-subtitle {
+        .history-subtitle {
           color: #6c757d;
           margin-bottom: 1.25rem;
         }
 
-        .workout-card { animation: fadeIn .35s ease; }
+        .workout-card {
+          animation: fadeIn 0.35s ease;
+        }
 
         .workout-header {
           display: flex;
@@ -63,7 +68,7 @@
           white-space: nowrap;
         }
 
-        .category-list {
+        .set-list {
           list-style: none;
           padding-left: 0;
           margin: 0;
@@ -71,32 +76,35 @@
           gap: .5rem;
         }
 
-        .category-item {
-          padding: .6rem .75rem;
-          border-radius: 12px;
-          background: rgba(0,0,0,0.03);
+        .set-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: .75rem;
+          padding: .6rem .75rem;
+          border-radius: 12px;
+          background: rgba(0,0,0,0.03);
         }
 
-        .category-item .left {
+        .set-left {
           display: flex;
           align-items: center;
           gap: .5rem;
           font-weight: 600;
         }
 
-        .actions {
-          display: flex;
-          gap: .5rem;
-          margin-top: 1rem;
+        .set-meta {
+          color: #6c757d;
+          font-weight: 500;
+          white-space: nowrap;
         }
 
-        .btn-soft {
-          border-radius: 14px;
-          padding: .85rem 1rem;
+        .empty-state {
+          color: #6c757d;
+          margin: 0;
+          padding: .75rem;
+          border-radius: 12px;
+          background: rgba(0,0,0,0.03);
         }
 
         @keyframes fadeIn {
@@ -112,52 +120,44 @@
 <div class="container mt-4 page-shell">
 
     <div class="text-center mb-3">
-        <h1 class="page-title">Workout history</h1>
+        <h1 class="history-title">
+            <span th:text="${exercise.exerciseName}"></span> history
+        </h1>
+        <p class="history-subtitle mb-0">See every session and the sets you logged.</p>
     </div>
 
     <div class="d-grid gap-3">
-        <div th:each="workout : ${workouts}" class="card-modern workout-card">
+        <div th:each="we : ${workoutExercises}" class="card-modern workout-card">
 
             <div class="workout-header">
                 <div class="workout-date">
                     <i class="bi bi-calendar-event"></i>
-                    <span th:text="${#temporals.format(workout.startedAt, 'dd MMM yyyy')}"></span>
+                    <span th:text="${#temporals.format(we.workout.startedAt, 'dd MMM yyyy HH:mm')}"></span>
                 </div>
 
                 <span class="badge-soft"
-                      th:text="${#lists.size(workout.workoutExercises)} + ' categories'"></span>
+                      th:text="${#lists.size(we.sets)} + ' sets'"></span>
             </div>
 
-            <div class="mb-2 fw-semibold">Categories</div>
+            <ul class="set-list" th:if="${!#lists.isEmpty(we.sets)}">
+                <li class="set-item" th:each="s : ${we.sets}">
+                    <div class="set-left">
+              <span class="badge text-bg-light border">
+                <span th:text="'Set ' + ${s.setNumber}"></span>
+              </span>
+                        <span th:text="${s.weightKg} + ' kg'"></span>
+                    </div>
 
-            <ul class="category-list" th:if="${workout.workoutExercises != null and #lists.size(workout.workoutExercises) > 0}">
-                <li class="category-item" th:each="we : ${workout.workoutExercises}">
-                    <div class="left">
-                        <i class="bi bi-tag"></i>
-                        <span th:text="${we.exercise.category.categoryName}"></span>
+                    <div class="set-meta">
+                        <i class="bi bi-arrow-repeat me-1"></i>
+                        <span th:text="${s.reps} + ' reps'"></span>
                     </div>
                 </li>
             </ul>
 
-            <p class="text-muted mb-0" th:if="${workout.workoutExercises == null or #lists.size(workout.workoutExercises) == 0}">
-                No exercises recorded for this workout.
+            <p class="empty-state" th:if="${#lists.isEmpty(we.sets)}">
+                No sets recorded.
             </p>
-
-            <div class="actions">
-                <a class="btn btn-outline-primary btn-soft flex-fill d-flex align-items-center justify-content-center gap-2">
-                    <i class="bi bi-pencil-square"></i>
-                    Update
-                </a>
-
-                <form th:action="@{'/history/delete/' + ${workout.id}}" method="post" class="flex-fill">
-                    <button type="submit"
-                            class="btn btn-outline-danger btn-soft w-100 d-flex align-items-center justify-content-center gap-2"
-                            onclick="return confirm('Delete this workout?');">
-                        <i class="bi bi-trash"></i>
-                        Delete
-                    </button>
-                </form>
-            </div>
 
         </div>
     </div>

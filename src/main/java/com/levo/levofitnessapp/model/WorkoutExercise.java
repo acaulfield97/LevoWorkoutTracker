@@ -3,6 +3,9 @@ package com.levo.levofitnessapp.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "workout_exercise")
 @Data
@@ -23,5 +26,9 @@ public class WorkoutExercise {
     private Exercise exercise;
 
     private String notes;
+
+    @OneToMany(mappedBy = "workoutExerciseId", fetch = FetchType.LAZY)
+    @OrderBy("setNumber ASC")
+    private List<Set> sets = new ArrayList<>();
 
 }
