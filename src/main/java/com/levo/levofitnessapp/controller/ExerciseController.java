@@ -14,7 +14,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 // got rid of unnecessary long routes (e.g. /exercise/select-exercise)
@@ -89,11 +88,37 @@ public class ExerciseController {
         return modelAndView;
     }
 
-    // doesn't do anything yet
-    // for a user to add a new exercise
-    @PostMapping("/add-exercise")
-    public RedirectView addExercise(Exercise exercise){
+    // page where user can create a new exercise
+    @GetMapping("/new")
+    public ModelAndView showCreateExercisePage() {
+        ModelAndView modelAndView = new ModelAndView("/add_new_exercise");
+
+        // pass all categories to populate the dropdown
+        Iterable<Category> categories = categoryRepository.findAll();
+        modelAndView.addObject("categories", categories);
+
+        return modelAndView;
+    }
+
+    // for a user to create a new exercise
+    @PostMapping("/new")
+    public RedirectView addExercise(@RequestParam String exerciseName,
+                                    @RequestParam Long categoryId,
+                                    @ModelAttribute("currentUserId") Long userId) {
+
+        // fetch the category
+        Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        // create new exercise
+        Exercise exercise = new Exercise();
+        exercise.setExerciseName(exerciseName);
+        exercise.setCategory(category);
         exerciseRepository.save(exercise);
+
+        // Redirect back to /exercise with the selected category
+        //return new RedirectView("/exercise?categoryId=" + categoryId);
+
         return new RedirectView("/exercise");
     }
 
