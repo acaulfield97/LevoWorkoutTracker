@@ -18,7 +18,7 @@ public class Set {
 
     @ManyToOne
     @JoinColumn(name = "workout_exercise_id")
-    private WorkoutExercise workoutExerciseId;
+    private WorkoutExercise workoutExercise;
 
     @Column(name = "set_number", nullable = false)
     private int setNumber;

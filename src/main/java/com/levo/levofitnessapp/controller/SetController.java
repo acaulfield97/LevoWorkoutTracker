@@ -60,7 +60,7 @@ public class SetController {
 
         Set set = new Set();
 
-        set.setWorkoutExerciseId(workoutExercise);
+        set.setWorkoutExercise(workoutExercise);
         set.setSetNumber(nextSetNumber);
         set.setWeightKg(weightKg);
         set.setReps(reps);
