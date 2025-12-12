@@ -16,40 +16,35 @@
 <!-- Mobile Navbar -->
 <div th:replace="fragments/mobile_navbar :: mobileNavbar('exercise')"></div>
 
-
 <div class="container mt-5">
-<div th:if="${!#lists.isEmpty(workoutExercises)}">
+    <!-- Current workout section -->
+    <div th:if="${!#lists.isEmpty(workoutExercises)}">
+        <h2>Current workout</h2>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="workoutExercise : ${workoutExercises}">
+                <strong th:text="${workoutExercise.exercise.exerciseName}"></strong>
 
-    <h2>Current workout</h2>
-
-    <ul class="list-group">
-        <li class="list-group-item" th:each="workoutExercise : ${workoutExercises}">
-            <strong th:text="${workoutExercise.exercise.exerciseName}"></strong>
-
-            <!--Show sets-->
-            <ul>
-                <li th:each="set: ${setsMap[workoutExercise.id]}">
-                    <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
-                    <span th:text="${set.weightKg} + ' kg'"></span>
-                    <span th:text="' x ' + ${set.reps} + ' reps'"></span>
-                </li>
-            </ul>
-
-        </li>
-    </ul>
-
-</div>
+                <!-- Show sets -->
+                <ul>
+                    <li th:each="set: ${setsMap[workoutExercise.id]}">
+                        <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
+                        <span th:text="${set.weightKg} + ' kg'"></span>
+                        <span th:text="' x ' + ${set.reps} + ' reps'"></span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 
     <h2 class="text-center mb-3 fw-bold">Select an Exercise</h2>
     <p class="text-center text-muted mb-4">Choose a category and exercise to continue</p>
 
     <!-- Card for the form -->
     <div class="card shadow-sm rounded-4 mt-3">
-    <div class="card-body">
+        <div class="card-body">
 
             <!-- FORM 1: Select category + exercise -->
             <form method="get" th:action="@{/exercise}">
-
                 <!-- Category dropdown -->
                 <div class="mb-3">
                     <label for="category-select" class="form-label fw-semibold">Category</label>
@@ -83,31 +78,38 @@
                         </option>
                     </select>
                 </div>
-
             </form>
 
-        <!-- FORM 2: Add exercise to workout -->
-        <form method="post" th:action="@{/workout-exercise}">
-            <input type="hidden" name="exerciseId" th:value="${selectedExerciseId}">
+            <!-- Buttons section with uniform spacing -->
+            <div class="d-grid gap-3">
 
-            <button type="submit"
-                    class="btn btn-primary btn-lg w-100 rounded-3 mb-3"
-                    th:disabled="${selectedExerciseId == null}">
-                Start Exercise
-            </button>
-        </form>
+                <!-- FORM 2: Add exercise to workout -->
+                <form method="post" th:action="@{/workout-exercise}">
+                    <input type="hidden" name="exerciseId" th:value="${selectedExerciseId}">
+                    <button type="submit"
+                            class="btn btn-primary btn-lg w-100 rounded-3"
+                            th:disabled="${selectedExerciseId == null}">
+                        Start Exercise
+                    </button>
+                </form>
 
+                <!-- Button to go to Add New Exercise page -->
+                <a class="btn btn-success btn-lg w-100 rounded-3" th:href="@{/exercise/new}">
+                    <i class="bi bi-plus-circle me-2"></i> Create Exercise
+                </a>
 
-        <!-- FORM 3: Finish adding exercises -->
-            <form th:action="@{/}" method="get">
-                <button type="submit" class="btn btn-outline-secondary btn-lg w-100 rounded-3">
-                    Finish Adding Exercises
-                </button>
-            </form>
+                <!-- FORM 3: Finish adding exercises -->
+                <form th:action="@{/}" method="get">
+                    <button type="submit" class="btn btn-outline-secondary btn-lg w-100 rounded-3">
+                        Finish Adding Exercises
+                    </button>
+                </form>
 
-        </div>
-    </div>
-</div>
+            </div> <!-- end d-grid -->
+
+        </div> <!-- end card-body -->
+    </div> <!-- end card -->
+</div> <!-- end container -->
 
 </body>
 </html>
