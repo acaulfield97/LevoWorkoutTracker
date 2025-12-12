@@ -3,14 +3,14 @@ package com.levo.levofitnessapp.controller;
 import com.levo.levofitnessapp.model.Workout;
 import com.levo.levofitnessapp.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/workout")
 public class WorkoutController {
 
@@ -34,6 +34,14 @@ public class WorkoutController {
                     workout.setEndedAt(LocalDateTime.now());
                     workoutRepository.save(workout);
                 });
+
+        return new RedirectView("/");
+    }
+
+    @PostMapping("/delete/{id}")
+    public RedirectView deleteWorkout(@PathVariable Long id) {
+
+        workoutRepository.findById(id).ifPresent(workoutRepository::delete);
 
         return new RedirectView("/");
     }
