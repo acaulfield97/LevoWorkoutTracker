@@ -1,40 +1,169 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Exercise History</title>
 
-    <body>
-        <div th:replace="fragments/navbar :: navbar"></div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
 
-        <div class="container mt-4">
-            <h1><span th:text="${exercise.exerciseName}"></span> history</h1>
-        </div>
+    <style>
+        body {
+          background: linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
+          min-height: 100vh;
+        }
 
-        <div class="exercise-history-feed">
-            <div th:each="we : ${workoutExercises}" class="exercise">
+        .page-shell {
+          max-width: 720px;
+        }
 
-                <div class="exercise-header">
-                    <div th:text="${#temporals.format(we.workout.startedAt, 'dd MMM yyyy HH:mm')}"></div>
+        .card-modern {
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(8px);
+          border-radius: 16px;
+          padding: 18px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-title {
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          margin-bottom: .25rem;
+        }
+
+        .history-subtitle {
+          color: #6c757d;
+          margin-bottom: 1.25rem;
+        }
+
+        .workout-card {
+          animation: fadeIn 0.35s ease;
+        }
+
+        .workout-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: .75rem;
+          padding-bottom: .75rem;
+          margin-bottom: .75rem;
+          border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .workout-date {
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+        }
+
+        .badge-soft {
+          background: rgba(13, 110, 253, 0.10);
+          color: #0d6efd;
+          border-radius: 999px;
+          padding: .35rem .6rem;
+          font-weight: 600;
+          font-size: .85rem;
+          white-space: nowrap;
+        }
+
+        .set-list {
+          list-style: none;
+          padding-left: 0;
+          margin: 0;
+          display: grid;
+          gap: .5rem;
+        }
+
+        .set-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: .75rem;
+          padding: .6rem .75rem;
+          border-radius: 12px;
+          background: rgba(0,0,0,0.03);
+        }
+
+        .set-left {
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+          font-weight: 600;
+        }
+
+        .set-meta {
+          color: #6c757d;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+
+        .empty-state {
+          color: #6c757d;
+          margin: 0;
+          padding: .75rem;
+          border-radius: 12px;
+          background: rgba(0,0,0,0.03);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4 page-shell">
+
+    <div class="text-center mb-3">
+        <h1 class="history-title">
+            <span th:text="${exercise.exerciseName}"></span> history
+        </h1>
+        <p class="history-subtitle mb-0">See every session and the sets you logged.</p>
+    </div>
+
+    <div class="d-grid gap-3">
+        <div th:each="we : ${workoutExercises}" class="card-modern workout-card">
+
+            <div class="workout-header">
+                <div class="workout-date">
+                    <i class="bi bi-calendar-event"></i>
+                    <span th:text="${#temporals.format(we.workout.startedAt, 'dd MMM yyyy HH:mm')}"></span>
                 </div>
 
-                <strong>Sets:</strong>
-                <ul>
-                    <li th:each="s : ${we.sets}">
-                        <span th:text="${s.setNumber}"></span>.
-                        <span th:text="${s.weightKg}"></span> kg ×
-                        <span th:text="${s.reps}"></span>
-                    </li>
-                </ul>
-
-                <p th:if="${#lists.isEmpty(we.sets)}">No sets recorded.</p>
+                <span class="badge-soft"
+                      th:text="${#lists.size(we.sets)} + ' sets'"></span>
             </div>
+
+            <ul class="set-list" th:if="${!#lists.isEmpty(we.sets)}">
+                <li class="set-item" th:each="s : ${we.sets}">
+                    <div class="set-left">
+              <span class="badge text-bg-light border">
+                <span th:text="'Set ' + ${s.setNumber}"></span>
+              </span>
+                        <span th:text="${s.weightKg} + ' kg'"></span>
+                    </div>
+
+                    <div class="set-meta">
+                        <i class="bi bi-arrow-repeat me-1"></i>
+                        <span th:text="${s.reps} + ' reps'"></span>
+                    </div>
+                </li>
+            </ul>
+
+            <p class="empty-state" th:if="${#lists.isEmpty(we.sets)}">
+                No sets recorded.
+            </p>
+
         </div>
+    </div>
 
+</div>
 
-
-    </body>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

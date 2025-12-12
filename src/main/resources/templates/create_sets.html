@@ -60,10 +60,14 @@
     <h2 class="text-center fw-bold mb-3" th:text="${exerciseName}"></h2>
     <p class="text-center text-muted mb-4">Track progress one set at a time.</p>
 
-    <form th:action="@{/exercise-history}" method="get">
+    <form th:action="@{/exercise-history}" method="get" class="mb-3">
         <input type="hidden" name="exerciseId" th:value="${exerciseId}">
-        <button type="submit">Exercise History</button>
+        <button type="submit" class="btn btn-outline-primary w-100 btn-lg d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-clock-history"></i>
+            Exercise History
+        </button>
     </form>
+
 
     <!-- Add Set Form -->
     <div class="card-modern mb-4">
