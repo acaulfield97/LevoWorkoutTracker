@@ -31,6 +31,15 @@
                 <div>Account</div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+
+                <!-- Link to Account page -->
+                <li>
+                    <a class="dropdown-item" th:href="@{/account}">
+                        <i class="bi bi-person-circle me-2"></i> My Account
+                    </a>
+                </li>
+
+                <!-- Logout button -->
                 <li>
                     <form th:action="@{/logout}" method="post" class="m-0">
                         <button type="submit" class="dropdown-item text-danger">
