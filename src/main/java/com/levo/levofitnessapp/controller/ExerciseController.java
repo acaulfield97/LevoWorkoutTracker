@@ -70,7 +70,7 @@ public class ExerciseController {
         // Load sets for each workoutExercise
         Map<Long, Iterable<Set>> setsMap = new HashMap<>();
         for (WorkoutExercise workoutExercise : workoutExercises) {
-            Iterable<Set> sets = setRepository.findByWorkoutExerciseId(workoutExercise);
+            Iterable<Set> sets = setRepository.findByWorkoutExerciseIdOrderBySetNumberAsc(workoutExercise);
             setsMap.put(workoutExercise.getId(), sets);
         }
 
