@@ -83,5 +83,35 @@ public class SetController {
         );
     }
 
+    @PostMapping("/delete")
+    public ModelAndView deleteSet(@RequestParam Long workoutExerciseId,
+                                  @RequestParam Long setId) {
+
+        WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
+                .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
+
+        Set setToDelete = setRepository.findById(setId)
+                .orElseThrow(() -> new RuntimeException("Set not found"));
+
+        setRepository.delete(setToDelete);
+
+        // Fetch remaining sets in order
+        Iterable<Set> remainingSets =
+                setRepository.findByWorkoutExerciseIdOrderBySetNumberAsc(workoutExercise);
+
+        // Renumber in order
+        int setNumber = 1;
+        for (Set set : remainingSets) {
+            set.setSetNumber(setNumber++);
+        }
+
+        setRepository.saveAll(remainingSets);
+
+        return new ModelAndView(
+                "redirect:/set?workoutExerciseId=" + workoutExerciseId
+        );
+    }
+
+
 }
 
