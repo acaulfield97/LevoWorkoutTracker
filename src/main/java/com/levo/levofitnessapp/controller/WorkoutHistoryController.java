@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/history")
@@ -26,7 +31,26 @@ public class WorkoutHistoryController {
 
     @GetMapping
     public String showHistory(Model model) {
-        model.addAttribute("workouts", workoutRepository.findAll());
+
+        // create workouts object and empty categories object
+        List<Workout> workouts = workoutRepository.findAllByOrderByStartedAtDesc();
+        Map<Long, List<String>> workoutCategories = new HashMap<>();
+
+        // loop through workouts to get a list of distinct category names
+        for (Workout w : workouts) {
+            List<String> uniqueCats =
+                    (w.getWorkoutExercises() == null ? List.<String>of()
+                            : w.getWorkoutExercises().stream()
+                            .map(we -> we.getExercise().getCategory().getCategoryName())
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .collect(Collectors.toList()));
+            workoutCategories.put(w.getId(), uniqueCats);
+        }
+
+        // add workout and category objects to the view
+        model.addAttribute("workouts", workouts);
+        model.addAttribute("workoutCategories", workoutCategories);
         return "WorkoutHistoryPage";
     }
 
