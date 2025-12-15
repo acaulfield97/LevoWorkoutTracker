@@ -1,0 +1,10 @@
+
+server:
+  port: ${PORT:8080}
+
+okta:
+  oauth2:
+    issuer: ${OKTA_ISSUER}
+    domain: ${OKTA_DOMAIN}
+    client-id: ${OKTA_CLIENT_ID}
+    client-secret: ${OKTA_CLIENT_SECRET}
