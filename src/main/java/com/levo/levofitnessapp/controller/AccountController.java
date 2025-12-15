@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/account")
@@ -42,13 +43,18 @@ public class AccountController {
 
     @PostMapping("/update-username")
     public String updateUsername(Authentication authentication,
-                                 @RequestParam String username) {
+                                 @RequestParam String username,
+                                 RedirectAttributes redirectAttributes) {
+
         var user = currentUserService.getCurrentUser(authentication);
 
         if (user != null) {
             user.setUsername(username);
             userRepository.save(user);
         }
+
+        // flash attribute = success msg shown once, then removed
+        redirectAttributes.addFlashAttribute("success", true);
 
         return "redirect:/account?success";
     }
