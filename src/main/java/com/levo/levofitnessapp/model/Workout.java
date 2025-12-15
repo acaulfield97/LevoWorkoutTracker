@@ -32,6 +32,7 @@ public class Workout {
     private String notes;
 
     @OneToMany(mappedBy = "workout")
+    @OrderBy("id ASC")
     private List<WorkoutExercise> workoutExercises = new ArrayList<>();
 
 }
