@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface WorkoutRepository extends CrudRepository<Workout, Long> {
     Optional<Workout> findByUserIdAndEndedAtIsNull(Long userId); // workout is "active" if endedAt is null
 
+    List<Workout> findAllByOrderByStartedAtDesc();
+
     @Query("""
        SELECT DISTINCT c.categoryName
        FROM Workout ws

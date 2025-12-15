@@ -125,16 +125,18 @@
                 </div>
 
                 <span class="badge-soft"
-                      th:text="${#lists.size(workout.workoutExercises)} + ' categories'"></span>
+                      th:text="${#lists.size(workoutCategories[workout.id])} + ' categories'"></span>
             </div>
 
             <div class="mb-2 fw-semibold">Categories</div>
 
-            <ul class="category-list" th:if="${workout.workoutExercises != null and #lists.size(workout.workoutExercises) > 0}">
-                <li class="category-item" th:each="we : ${workout.workoutExercises}">
+
+            <ul class="category-list"
+                th:if="${workoutCategories[workout.id] != null and #lists.size(workoutCategories[workout.id]) > 0}">
+                <li class="category-item" th:each="cat : ${workoutCategories[workout.id]}">
                     <div class="left">
                         <i class="bi bi-tag"></i>
-                        <span th:text="${we.exercise.category.categoryName}"></span>
+                        <span th:text="${cat}"></span>
                     </div>
                 </li>
             </ul>
