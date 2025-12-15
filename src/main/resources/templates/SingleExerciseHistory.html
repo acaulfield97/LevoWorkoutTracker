@@ -126,6 +126,15 @@
         <p class="history-subtitle mb-0">See every session and the sets you logged.</p>
     </div>
 
+    <div class="d-flex justify-content-center gap-2 mb-3">
+        <a class="btn btn-outline-primary"
+           th:href="@{/exercise-history/{id}/analytics(id=${exercise.id})}">
+            <i class="bi bi-graph-up"></i>
+            Analytics
+        </a>
+    </div>
+
+
     <div class="d-grid gap-3">
         <div th:each="we : ${workoutExercises}" class="card-modern workout-card">
 
