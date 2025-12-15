@@ -1,7 +1,5 @@
 package com.levo.levofitnessapp.controller;
 
-import ch.qos.logback.core.model.Model;
-import com.levo.levofitnessapp.model.Exercise;
 import com.levo.levofitnessapp.model.Set;
 import com.levo.levofitnessapp.model.WorkoutExercise;
 import com.levo.levofitnessapp.repository.SetRepository;
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/set")
@@ -29,43 +25,55 @@ public class SetController {
     }
 
     @GetMapping("")
-    public ModelAndView setPage(@RequestParam Long workoutExerciseId) {
+    public ModelAndView setPage(@RequestParam Long workoutExerciseId,
+                                @RequestParam(required = false) Long setId) {
 
-        ModelAndView modelAndView = new ModelAndView("/create_sets");
-        modelAndView.addObject("workoutExerciseId", workoutExerciseId);
+        ModelAndView mav = new ModelAndView("create_sets");
 
-        WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
-                .orElseThrow(() -> new RuntimeException("No workout exercise found"));
+        WorkoutExercise we = workoutExerciseRepository.findById(workoutExerciseId).orElseThrow();
 
-        // Add exercise name
-        Exercise exercise = workoutExercise.getExercise();
-        modelAndView.addObject("exerciseName", exercise.getExerciseName());
-        modelAndView.addObject("exerciseId", exercise.getId());
+        mav.addObject("workoutExerciseId", workoutExerciseId);
+        mav.addObject("exerciseName", we.getExercise().getExerciseName());
+        mav.addObject("exerciseId", we.getExercise().getId());
+        mav.addObject("sets", setRepository.findByWorkoutExerciseIdOrderBySetNumberAsc(we));
 
-        Iterable<Set> sets = setRepository.findByWorkoutExerciseId(workoutExercise);
-        modelAndView.addObject("sets", sets);
 
-        return modelAndView;
+        if (setId != null) {
+            Set selectedSet = setRepository.findById(setId).orElseThrow();
+            mav.addObject("selectedSet", selectedSet);
+        }
+
+        return mav;
     }
 
     @PostMapping("")
     public ModelAndView saveSet(@RequestParam Long workoutExerciseId,
                                 @RequestParam Long exerciseId,
                                 @RequestParam int weightKg,
-                                @RequestParam int reps){
+                                @RequestParam int reps,
+                                @RequestParam(required = false) Long setId) { // <-- added setId
 
         WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
                 .orElseThrow(() -> new RuntimeException("No workout exercise found"));
 
-        // Calculate next set number automatically
-        int nextSetNumber = setRepository.countByWorkoutExerciseId(workoutExercise) + 1;
+        Set set;
 
-        Set set = new Set();
-
-        set.setWorkoutExerciseId(workoutExercise);
-        set.setSetNumber(nextSetNumber);
-        set.setWeightKg(weightKg);
-        set.setReps(reps);
+        if (setId != null) {
+            // Updating existing set
+            set = setRepository.findById(setId)
+                    .orElseThrow(() -> new RuntimeException("Set not found"));
+            set.setWeightKg(weightKg);
+            set.setReps(reps);
+            // Optionally, you can leave setNumber as-is
+        } else {
+            // Creating new set
+            set = new Set();
+            set.setWorkoutExerciseId(workoutExercise);
+            int nextSetNumber = setRepository.countByWorkoutExerciseId(workoutExercise) + 1;
+            set.setSetNumber(nextSetNumber);
+            set.setWeightKg(weightKg);
+            set.setReps(reps);
+        }
 
         setRepository.save(set);
 
@@ -75,6 +83,5 @@ public class SetController {
         );
     }
 
-
-
 }
+
