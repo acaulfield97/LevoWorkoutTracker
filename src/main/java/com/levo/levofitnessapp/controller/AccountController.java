@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequestMapping("/account")
 public class AccountController {
 
     private final CurrentUserService currentUserService;
@@ -29,7 +31,7 @@ public class AccountController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/account")
+    @GetMapping("")
     public String accountPage(Model model, Authentication authentication) {
         User user = currentUserService.getCurrentUser(authentication);
         model.addAttribute("user", user);
