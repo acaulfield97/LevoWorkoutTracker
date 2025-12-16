@@ -31,10 +31,12 @@ public class WorkoutHistoryController {
 
     @GetMapping
     public String showHistory(@RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date,
-                              Model model) {
+                              Model model,
+                             @ModelAttribute("currentUserId") Long userId) {
 
         // create workouts object and empty categories object
-        List<Workout> workouts = workoutRepository.findAllByOrderByStartedAtDesc();
+        List<Workout> workouts =
+                workoutRepository.findAllByUserIdOrderByStartedAtDesc(userId);
         Map<Long, List<String>> workoutCategories = new HashMap<>();
 
         // if a date is provided, filter workouts to only those on that date
@@ -74,9 +76,11 @@ public class WorkoutHistoryController {
     }
 
     @GetMapping("/details/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String showDetails(@PathVariable Long id,
+                              @ModelAttribute("currentUserId") Long userId,
+                              Model model) {
 
-        Workout workout = workoutRepository.findByIdWithExercises(id)
+        Workout workout = workoutRepository.findByIdAndUserIdWithExercises(id, userId)
                 .orElseThrow(() -> new IllegalArgumentException("Workout not found: " + id));
 
         model.addAttribute("workout", workout);

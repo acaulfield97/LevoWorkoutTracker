@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "workout_Exercise_set")
+@Table(name = "workout_exercise_set")
 @Data   // getters, setters
 @NoArgsConstructor
 @AllArgsConstructor
