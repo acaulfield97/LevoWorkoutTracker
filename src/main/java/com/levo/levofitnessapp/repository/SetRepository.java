@@ -12,7 +12,6 @@ import java.util.List;
 
 public interface SetRepository extends CrudRepository<Set, Long> {
     int countByWorkoutExerciseId(WorkoutExercise workoutExercise);
-    Iterable<Set> findByWorkoutExerciseId(WorkoutExercise workoutExercise);
 
     // Order sets by setNumber ascending
     Iterable<Set> findByWorkoutExerciseIdOrderBySetNumberAsc(WorkoutExercise workoutExercise);
