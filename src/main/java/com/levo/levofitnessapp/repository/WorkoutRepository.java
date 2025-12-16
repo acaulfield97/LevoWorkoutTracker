@@ -14,8 +14,11 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     List<Workout> findAllByOrderByStartedAtDesc();
 
+    List<Workout> findAllByUserIdOrderByStartedAtDesc(Long userId);
+
     @Query("""
-       SELECT DISTINCT c.categoryName
+
+            SELECT DISTINCT c.categoryName
        FROM Workout ws
        JOIN ws.workoutExercises we
        JOIN we.exercise e
@@ -27,12 +30,16 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     // find workout exercises for a certain exercise type and join their sets
     @Query("""
-        SELECT DISTINCT wo
-        FROM Workout wo
-        LEFT JOIN FETCH wo.workoutExercises we
-        LEFT JOIN FETCH we.exercise e
-        LEFT JOIN FETCH e.category c
-        WHERE wo.id = :workoutId
-        """)
-    Optional<Workout> findByIdWithExercises(@Param("workoutId") Long workoutId);
-}
+    SELECT DISTINCT wo
+    FROM Workout wo
+    LEFT JOIN FETCH wo.workoutExercises we
+    LEFT JOIN FETCH we.exercise e
+    LEFT JOIN FETCH e.category c
+    WHERE wo.id = :workoutId
+      AND wo.userId = :userId
+    """)
+    Optional<Workout> findByIdAndUserIdWithExercises(
+            @Param("workoutId") Long workoutId,
+            @Param("userId") Long userId
+    );
+        }

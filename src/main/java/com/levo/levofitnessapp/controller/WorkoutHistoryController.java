@@ -30,10 +30,11 @@ public class WorkoutHistoryController {
     private WorkoutRepository workoutRepository;
 
     @GetMapping
-    public String showHistory(Model model) {
+    public String showHistory(@ModelAttribute("currentUserId") Long userId, Model model) {
 
         // create workouts object and empty categories object
-        List<Workout> workouts = workoutRepository.findAllByOrderByStartedAtDesc();
+        List<Workout> workouts =
+                workoutRepository.findAllByUserIdOrderByStartedAtDesc(userId);
         Map<Long, List<String>> workoutCategories = new HashMap<>();
 
         // loop through workouts to get a list of distinct category names
@@ -63,9 +64,11 @@ public class WorkoutHistoryController {
     }
 
     @GetMapping("/details/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String showDetails(@PathVariable Long id,
+                              @ModelAttribute("currentUserId") Long userId,
+                              Model model) {
 
-        Workout workout = workoutRepository.findByIdWithExercises(id)
+        Workout workout = workoutRepository.findByIdAndUserIdWithExercises(id, userId)
                 .orElseThrow(() -> new IllegalArgumentException("Workout not found: " + id));
 
         model.addAttribute("workout", workout);

@@ -32,6 +32,7 @@ public class ExerciseHistoryController {
 
     @GetMapping
     public String showHistory(@RequestParam Long exerciseId,
+                              @ModelAttribute("currentUserId") Long userId,
                               Model model) {
 
         // get exercise - used for exercise name in page title
@@ -39,7 +40,7 @@ public class ExerciseHistoryController {
                 .orElseThrow(() -> new IllegalArgumentException("Exercise not found: " + exerciseId));
 
         // get all workout exercises for the specific exercise type
-        var workoutExercise = workoutExerciseRepository.findByExerciseIdWithSets(exerciseId);
+        var workoutExercise = workoutExerciseRepository.findByExerciseIdAndUserWithSets(exerciseId, userId);
 
         // sort newest to oldest
         workoutExercise.sort(
