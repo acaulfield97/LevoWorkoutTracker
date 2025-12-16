@@ -113,6 +113,19 @@
 
     <div class="text-center mb-3">
         <h1 class="page-title">Workout history</h1>
+
+        <div class="d-flex justify-content-center mt-2">
+            <a th:href="@{/history/calendar}"
+               class="btn btn-outline-primary btn-soft d-inline-flex align-items-center gap-2">
+                <i class="bi bi-calendar-week"></i>
+                Calendar view
+            </a>
+        </div>
+
+        <p class="page-subtitle mb-0" th:if="${selectedDate != null}">
+            Showing workouts for <span th:text="${#temporals.format(selectedDate, 'dd MMM yyyy')}"></span>
+            · <a th:href="@{/history}">Clear filter</a>
+        </p>
     </div>
 
     <div class="d-grid gap-3">

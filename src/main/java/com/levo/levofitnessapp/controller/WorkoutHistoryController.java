@@ -30,11 +30,22 @@ public class WorkoutHistoryController {
     private WorkoutRepository workoutRepository;
 
     @GetMapping
-    public String showHistory(Model model) {
+    public String showHistory(@RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date,
+                              Model model) {
 
         // create workouts object and empty categories object
         List<Workout> workouts = workoutRepository.findAllByOrderByStartedAtDesc();
         Map<Long, List<String>> workoutCategories = new HashMap<>();
+
+        // if a date is provided, filter workouts to only those on that date
+        if (date != null) {
+            var start = date.atStartOfDay();
+            var end = date.plusDays(1).atStartOfDay();
+            workouts = workoutRepository.findAllByStartedAtBetweenOrderByStartedAtDesc(start, end);
+            model.addAttribute("selectedDate", date);
+        } else {
+            workouts = workoutRepository.findAllByOrderByStartedAtDesc();
+        }
 
         // loop through workouts to get a list of distinct category names
         for (Workout w : workouts) {
@@ -70,6 +81,17 @@ public class WorkoutHistoryController {
 
         model.addAttribute("workout", workout);
         return "WorkoutExerciseHistoryPage";
+    }
+
+    // Show calendar view of workouts
+    @GetMapping("/calendar")
+    public String showCalendar(Model model) {
+        var days = workoutRepository.findWorkoutDays();
+
+        // Convert to "YYYY-MM-DD" strings
+        var workoutDays = days.stream().map(java.sql.Date::toString).toList();
+        model.addAttribute("workoutDays", workoutDays);
+        return "WorkoutCalendarPage";
     }
 }
 
