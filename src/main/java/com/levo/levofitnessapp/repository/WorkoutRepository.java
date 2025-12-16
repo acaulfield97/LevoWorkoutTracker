@@ -14,6 +14,8 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     List<Workout> findAllByOrderByStartedAtDesc();
 
+    List<Workout> findAllByUserIdAndStartedAtBetweenOrderByStartedAtDesc(Long userId, java.time.LocalDateTime start, java.time.LocalDateTime end);
+
     List<Workout> findAllByUserIdOrderByStartedAtDesc(Long userId);
 
     // find workout exercises for a certain exercise type and join their sets
@@ -52,4 +54,5 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
             @Param("end") java.time.LocalDateTime end
     );
 }
+
 
