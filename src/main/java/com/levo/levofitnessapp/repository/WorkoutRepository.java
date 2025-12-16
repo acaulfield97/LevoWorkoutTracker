@@ -36,11 +36,13 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     // query to get distinct days when workouts were performed
     @Query(value = """
-    SELECT DISTINCT DATE(started_at) AS day
-    FROM workout_session
-    ORDER BY day DESC
-        """, nativeQuery = true)
-    List<java.sql.Date> findWorkoutDays();
+SELECT DISTINCT DATE(started_at) AS day
+FROM workout_session
+WHERE user_id = :userId
+ORDER BY day DESC
+""", nativeQuery = true)
+    List<java.sql.Date> findWorkoutDaysByUser(@Param("userId") Long userId);
+
 
     // find all workouts between start and end date ordered by startedAt descending
     @Query("""

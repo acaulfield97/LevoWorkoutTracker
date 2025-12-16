@@ -89,8 +89,8 @@ public class WorkoutHistoryController {
 
     // Show calendar view of workouts
     @GetMapping("/calendar")
-    public String showCalendar(Model model) {
-        var days = workoutRepository.findWorkoutDays();
+    public String showCalendar(@ModelAttribute("currentUserId") Long userId, Model model) {
+        var days = workoutRepository.findWorkoutDaysByUser(userId);
 
         // Convert to "YYYY-MM-DD" strings
         var workoutDays = days.stream().map(java.sql.Date::toString).toList();
