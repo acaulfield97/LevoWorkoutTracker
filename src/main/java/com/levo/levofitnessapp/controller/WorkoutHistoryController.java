@@ -31,23 +31,23 @@ public class WorkoutHistoryController {
 
     @GetMapping
     public String showHistory(@RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date,
-                              Model model,
-                             @ModelAttribute("currentUserId") Long userId) {
+                              @ModelAttribute("currentUserId") Long userId,
+                              Model model) {
 
         // create workouts object and empty categories object
-        List<Workout> workouts =
-                workoutRepository.findAllByUserIdOrderByStartedAtDesc(userId);
-        Map<Long, List<String>> workoutCategories = new HashMap<>();
+        List<Workout> workouts;
 
         // if a date is provided, filter workouts to only those on that date
         if (date != null) {
             var start = date.atStartOfDay();
             var end = date.plusDays(1).atStartOfDay();
-            workouts = workoutRepository.findAllByStartedAtBetweenOrderByStartedAtDesc(start, end);
+            workouts = workoutRepository.findAllByUserIdAndStartedAtBetweenOrderByStartedAtDesc(userId, start, end);
             model.addAttribute("selectedDate", date);
         } else {
-            workouts = workoutRepository.findAllByOrderByStartedAtDesc();
+            workouts = workoutRepository.findAllByUserIdOrderByStartedAtDesc(userId);
         }
+
+        Map<Long, List<String>> workoutCategories = new HashMap<>();
 
         // loop through workouts to get a list of distinct category names
         for (Workout w : workouts) {
