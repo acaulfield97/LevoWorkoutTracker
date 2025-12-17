@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title th:text="${exercise.exerciseName} + ' Analytics'">Exercise Analytics</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -47,13 +48,12 @@
 </head>
 
 <body>
-<div th:replace="fragments/mobile_navbar :: mobileNavbar('home')"></div>
+<div th:replace="fragments/mobile_navbar :: mobileNavbar('')"></div>
 
 <div class="container mt-4 page-shell">
 
     <div class="text-center mb-3">
         <h1 class="page-title">
-            <i class="bi bi-graph-up me-2"></i>
             <span th:text="${exercise.exerciseName}"></span> Analytics
         </h1>
         <p class="page-subtitle mb-0">Max weight per workout (over time)</p>
@@ -83,7 +83,7 @@
     const labels = points.map(p => {
       // date could come through as "2025-12-15T10:30:00"
       const d = new Date(p.date);
-      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' });
+      return d.toLocaleDateString(undefined, { day: '2-digit', month: 'short' });
     });
 
     const weights = points.map(p => p.weightKg);
