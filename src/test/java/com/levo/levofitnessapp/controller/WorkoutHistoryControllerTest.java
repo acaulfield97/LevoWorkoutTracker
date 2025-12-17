@@ -197,19 +197,21 @@ public class WorkoutHistoryControllerTest {
     @Test
     void showCalendar_returnsCalendarView_andAddsWorkoutDaysAsStrings() throws Exception {
 
+        long userId = 1L;
+
         // stub the repository to return some workout days
-        when(workoutRepository.findWorkoutDays())
+        when(workoutRepository.findWorkoutDaysByUser(userId))
                 .thenReturn(List.of(Date.valueOf("2025-12-01"), Date.valueOf("2025-12-03")));
 
         // perform GET request to show calendar
-        mockMvc.perform(get("/history/calendar"))
+        mockMvc.perform(get("/history/calendar").flashAttr("currentUserId", userId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("WorkoutCalendarPage"))
                 .andExpect(model().attributeExists("workoutDays"))
                 .andExpect(model().attribute("workoutDays", contains("2025-12-01", "2025-12-03")));
 
         // verify that the repository method was called
-        verify(workoutRepository).findWorkoutDays();
+        verify(workoutRepository).findWorkoutDaysByUser(userId);
     }
 
 }
