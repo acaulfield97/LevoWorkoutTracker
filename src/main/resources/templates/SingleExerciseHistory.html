@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Exercise History</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -115,15 +116,14 @@
 </head>
 
 <body>
-<div th:replace="fragments/mobile_navbar :: mobileNavbar('home')"></div>
+<div th:replace="fragments/mobile_navbar :: mobileNavbar('')"></div>
 
 <div class="container mt-4 page-shell">
 
     <div class="text-center mb-3">
         <h1 class="history-title">
-            <span th:text="${exercise.exerciseName}"></span> history
+            <span th:text="${exercise.exerciseName}"></span> History
         </h1>
-        <p class="history-subtitle mb-0">See every session and the sets you logged.</p>
     </div>
 
     <div class="d-flex justify-content-center gap-2 mb-3">
