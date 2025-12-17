@@ -21,8 +21,8 @@
     <div th:if="${!#lists.isEmpty(workoutExercises)}" class="mb-4">
         <h4 class="fw-bold mb-3 text-center">Current Workout</h4>
 
-        <div class="card rounded-4">
-            <ul class="list-group">
+        <div class="card rounded-4 shadow-sm overflow-hidden">
+            <ul class="list-group list-group-flush">
 
                 <th:block th:each="workoutExercise : ${workoutExercises}">
                     <li class="list-group-item py-3">
@@ -82,7 +82,7 @@
     <h4 class="text-center mb-3 fw-bold">Select an Exercise</h4>
 
     <!-- Card for the form -->
-    <div class="card shadow-sm rounded-4 mt-3">
+    <div class="card shadow-sm rounded-4 mt-3 mb-3">
         <div class="card-body">
 
             <!-- FORM 1: Select category + exercise -->
