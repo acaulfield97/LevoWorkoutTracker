@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Workout Calendar</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -9,7 +10,11 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet" />
 
     <style>
-        body { background: linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%); min-height: 100vh; }
+        body {
+          background: linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
+          min-height: 100vh;
+        }
+
         .page-shell { max-width: 720px; }
 
         .card-modern{
@@ -20,25 +25,95 @@
           box-shadow: 0 8px 20px rgba(0,0,0,.05);
         }
 
-        .page-title { font-weight: 800; letter-spacing: -0.02em; margin-bottom: .25rem; }
-        .page-subtitle { color: #6c757d; margin-bottom: 1.25rem; }
+        .page-title {
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          margin-bottom: .25rem;
+        }
+
+        .page-subtitle {
+          color: #6c757d;
+          margin-bottom: 1.25rem;
+        }
 
         /* Highlight days with workouts */
         .fc-daygrid-day.has-workout {
           cursor: pointer;
         }
+
         .fc-daygrid-day.has-workout .fc-daygrid-day-frame {
           border-radius: 12px;
-          background: rgba(25, 135, 84, 0.14); /* green-ish */
+          background: rgba(25, 135, 84, 0.14);
           outline: 1px solid rgba(25, 135, 84, 0.18);
         }
+
         .fc-daygrid-day.has-workout:hover .fc-daygrid-day-frame {
           background: rgba(25, 135, 84, 0.22);
         }
 
-        /* Make calendar look nicer inside your card */
-        .fc .fc-toolbar-title { font-size: 1.1rem; font-weight: 800; }
-        .fc .fc-button { border-radius: 12px; }
+        /* Calendar toolbar */
+        .fc .fc-toolbar-title {
+          font-size: 1.5rem;
+          font-weight: 800;
+        }
+
+        .fc .fc-button {
+          border-radius: 12px;
+        }
+
+        /* Mobile (iPhone SE) */
+        @media (max-width: 400px) {
+
+          /* Toolbar tightening */
+          .fc .fc-toolbar {
+            margin-bottom: .5rem;
+          }
+
+          .fc .fc-toolbar-title {
+            font-size: 1.1rem;
+            white-space: nowrap;
+          }
+
+          .fc .fc-button {
+            padding: .25rem .45rem;
+            font-size: .8rem;
+          }
+
+          /* FORCE SQUARE DAY CELLS */
+          .fc-daygrid-day-frame {
+            aspect-ratio: 1 / 1;
+            min-height: unset;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .fc-daygrid-day {
+            height: auto !important;
+          }
+
+          .fc-daygrid-day-number {
+            position: static;
+            font-size: .85rem;
+            font-weight: 600;
+          }
+
+          /* Softer grid lines */
+          .fc-theme-standard td,
+          .fc-theme-standard th {
+            border-color: rgba(0,0,0,.05);
+          }
+
+          .fc-daygrid-day-top {
+            justify-content: center;
+          }
+
+          /* Card spacing */
+          .card-modern {
+            padding: 12px;
+            border-radius: 14px;
+          }
+        }
     </style>
 </head>
 
@@ -47,8 +122,12 @@
 
 <div class="container mt-4 page-shell">
     <div class="text-center mb-3">
-        <h1 class="page-title"><i class="bi bi-calendar-week me-2"></i>Workout calendar</h1>
-        <p class="page-subtitle mb-0">Green days have workouts. Click a day to view details.</p>
+        <h2 class="page-title">
+            <i class="bi bi-calendar-week me-2"></i>Calendar
+        </h2>
+        <p class="page-subtitle mb-0 small">
+            Click a highlighted day to view workout.
+        </p>
     </div>
 
     <div class="card-modern">
@@ -59,37 +138,37 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
 <script th:inline="javascript">
-    // Get the workout days from the server-side
     const workoutDays = /*[[${workoutDays}]]*/ [];
     const workoutDaySet = new Set(workoutDays);
 
-    // When the DOM is ready, initialize the calendar
     document.addEventListener('DOMContentLoaded', function () {
       const calendarEl = document.getElementById('calendar');
 
-        // Initialize FullCalendar
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: 'auto',
 
-        // Customize day cells after they are mounted
+        headerToolbar: {
+          left: 'prev',
+          center: 'title',
+          right: 'next'
+        },
+
         dayCellDidMount: function(info) {
           const yyyy = info.date.getFullYear();
           const mm = String(info.date.getMonth() + 1).padStart(2, '0');
           const dd = String(info.date.getDate()).padStart(2, '0');
           const key = `${yyyy}-${mm}-${dd}`;
 
-            // If this day has a workout, add the class and click handler
           if (workoutDaySet.has(key)) {
-              info.el.classList.add('has-workout');
-              info.el.addEventListener('click', () => {
-                window.location.href = `/history?date=${key}`;
-              });
-            }
+            info.el.classList.add('has-workout');
+            info.el.addEventListener('click', () => {
+              window.location.href = `/history?date=${key}`;
+            });
+          }
         }
       });
 
-        // Render the calendar
       calendar.render();
     });
 </script>
