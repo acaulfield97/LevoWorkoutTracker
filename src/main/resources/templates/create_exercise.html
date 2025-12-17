@@ -16,71 +16,70 @@
 <!-- Mobile Navbar -->
 <div th:replace="fragments/mobile_navbar :: mobileNavbar('exercise')"></div>
 
-<div class="container mt-5">
+<div class="container mt-4">
     <!-- Current workout section -->
     <div th:if="${!#lists.isEmpty(workoutExercises)}" class="mb-4">
-        <h5 class="fw-bold mb-3 text-center">Current Workout</h5>
+        <h4 class="fw-bold mb-3 text-center">Current Workout</h4>
 
-        <div class="card shadow-sm rounded-4">
-            <ul class="list-group list-group-flush">
+        <div class="card rounded-4">
+            <ul class="list-group">
 
                 <th:block th:each="workoutExercise : ${workoutExercises}">
                     <li class="list-group-item py-3">
 
                         <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap flex-sm-nowrap">
 
-                        <!-- Exercise name -->
-                        <strong class="fs-6 lh-sm">
-                            <span th:text="${workoutExercise.exercise.exerciseName}"></span>
-                        </strong>
+                            <!-- Exercise name -->
+                            <strong class="fs-6 lh-sm">
+                                <span th:text="${workoutExercise.exercise.exerciseName}"></span>
+                            </strong>
 
-                        <!-- Buttons -->
-                        <div class="d-flex align-items-center gap-2">
+                            <!-- Buttons -->
+                            <div class="d-flex align-items-center gap-2">
 
-                            <!-- Resume -->
-                            <a class="btn btn-outline-primary btn-sm d-flex align-items-center"
-                               th:href="@{/set(workoutExerciseId=${workoutExercise.id})}">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
+                                <!-- Resume -->
+                                <a class="btn btn-outline-primary btn-sm d-flex align-items-center"
+                                   th:href="@{/set(workoutExerciseId=${workoutExercise.id})}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
 
-                            <!-- Delete -->
-                            <form th:action="@{/workout-exercise/delete}"
-                                  method="post"
-                                  class="m-0"
-                                  th:onsubmit="return confirm('Remove this exercise from the workout?');">
+                                <!-- Delete -->
+                                <form th:action="@{/workout-exercise/delete}"
+                                      method="post"
+                                      class="m-0"
+                                      th:onsubmit="return confirm('Remove this exercise from the workout?');">
 
-                                <input type="hidden"
-                                       name="workoutExerciseId"
-                                       th:value="${workoutExercise.id}" />
+                                    <input type="hidden"
+                                           name="workoutExerciseId"
+                                           th:value="${workoutExercise.id}" />
 
-                                <button type="submit"
-                                        class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Sets -->
-                    <ul class="mt-2 mb-0 ps-3 small text-muted">
-                        <li th:each="set : ${setsMap[workoutExercise.id]}">
-                            <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
-                            <span th:text="${set.weightKg} + ' kg'"></span>
-                            <span th:text="' x ' + ${set.reps} + ' reps'"></span>
-                        </li>
-                    </ul>
+                        <!-- Sets -->
+                        <ul class="mt-2 mb-0 ps-3 small text-muted">
+                            <li th:each="set : ${setsMap[workoutExercise.id]}">
+                                <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
+                                <span th:text="${set.weightKg} + ' kg'"></span>
+                                <span th:text="' x ' + ${set.reps} + ' reps'"></span>
+                            </li>
+                        </ul>
 
-                </li>
-            </th:block>
-
+                    </li>
+                </th:block>
 
 
-        </ul>
+
+            </ul>
+        </div>
     </div>
-</div>
 
-    <h2 class="text-center mb-3 fw-bold">Select an Exercise</h2>
-    <p class="text-center text-muted mb-4">Choose a category and exercise to continue</p>
+    <h4 class="text-center mb-3 fw-bold">Select an Exercise</h4>
 
     <!-- Card for the form -->
     <div class="card shadow-sm rounded-4 mt-3">
@@ -93,7 +92,7 @@
                     <label for="category-select" class="form-label fw-semibold">Category</label>
                     <select id="category-select"
                             name="categoryId"
-                            class="form-select form-select-lg rounded-3"
+                            class="form-select rounded-3"
                             required
                             onchange="this.form.submit();">
                         <option value="">Select a category</option>
@@ -110,7 +109,7 @@
                     <label for="exercise-select" class="form-label fw-semibold">Exercise</label>
                     <select id="exercise-select"
                             name="exerciseId"
-                            class="form-select form-select-lg rounded-3"
+                            class="form-select rounded-3"
                             th:disabled="${#lists.isEmpty(exercises)}"
                             onchange="this.form.submit();">
                         <option value="">Select an exercise</option>
@@ -130,20 +129,20 @@
                 <form method="post" th:action="@{/workout-exercise}">
                     <input type="hidden" name="exerciseId" th:value="${selectedExerciseId}">
                     <button type="submit"
-                            class="btn btn-primary btn-lg w-100 rounded-3"
+                            class="btn btn-primary w-100 rounded-3"
                             th:disabled="${selectedExerciseId == null}">
                         Start Exercise
                     </button>
                 </form>
 
                 <!-- Button to go to Add New Exercise page -->
-                <a class="btn btn-success btn-lg w-100 rounded-3" th:href="@{/exercise/new}">
+                <a class="btn btn-success w-100 rounded-3" th:href="@{/exercise/new}">
                     <i class="bi bi-plus-circle me-2"></i> Create Exercise
                 </a>
 
                 <!-- FORM 3: Finish adding exercises -->
                 <form th:action="@{/}" method="get">
-                    <button type="submit" class="btn btn-outline-secondary btn-lg w-100 rounded-3">
+                    <button type="submit" class="btn btn-outline-secondary w-100 rounded-3">
                         Finish Adding Exercises
                     </button>
                 </form>
