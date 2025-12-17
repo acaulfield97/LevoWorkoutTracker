@@ -89,4 +89,18 @@ public class WorkoutExerciseController {
         return mav;
     }
 
+    
+    @PostMapping("/delete")
+    public ModelAndView deleteWorkoutExercise(
+            @RequestParam Long workoutExerciseId) {
+
+        WorkoutExercise workoutExercise =
+                workoutExerciseRepository.findById(workoutExerciseId)
+                        .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
+
+        workoutExerciseRepository.delete(workoutExercise);
+
+        return new ModelAndView("redirect:/exercise");
+    }
+
 }
