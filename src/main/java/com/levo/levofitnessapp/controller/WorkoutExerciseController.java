@@ -1,9 +1,11 @@
 package com.levo.levofitnessapp.controller;
 
 import com.levo.levofitnessapp.model.Exercise;
+import com.levo.levofitnessapp.model.Set;
 import com.levo.levofitnessapp.model.Workout;
 import com.levo.levofitnessapp.model.WorkoutExercise;
 import com.levo.levofitnessapp.repository.ExerciseRepository;
+import com.levo.levofitnessapp.repository.SetRepository;
 import com.levo.levofitnessapp.repository.WorkoutExerciseRepository;
 import com.levo.levofitnessapp.repository.WorkoutRepository;
 import org.springframework.stereotype.Controller;
@@ -17,13 +19,16 @@ public class WorkoutExerciseController {
     private final WorkoutExerciseRepository workoutExerciseRepository;
     private final WorkoutRepository workoutRepository;
     private final ExerciseRepository exerciseRepository;
+    private final SetRepository setRepository;
 
     public WorkoutExerciseController(WorkoutExerciseRepository workoutExerciseRepository,
                                      WorkoutRepository workoutRepository,
-                                     ExerciseRepository exerciseRepository) {
+                                     ExerciseRepository exerciseRepository,
+                                     SetRepository setRepository) {
         this.workoutExerciseRepository = workoutExerciseRepository;
         this.workoutRepository = workoutRepository;
         this.exerciseRepository = exerciseRepository;
+        this.setRepository = setRepository;
     }
 
     /**
@@ -52,19 +57,53 @@ public class WorkoutExerciseController {
         );
     }
 
-    /**
-     * View a single workout exercise (history + sets)
-     */
+//    /**
+//     * View a single workout exercise (history + sets) for editing or adding sets
+//     */
+//    @GetMapping("/{id}")
+//    public ModelAndView viewWorkoutExercise(@PathVariable Long id) {
+//        WorkoutExercise we = workoutExerciseRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
+//
+//        ModelAndView mav = new ModelAndView("EditWorkoutExercisePage");
+//
+//        mav.addObject("workoutExercise", we);
+//        mav.addObject("workout", we.getWorkout());
+//
+//        return mav;
+//    }
+
     @GetMapping("/{id}")
-    public ModelAndView viewWorkoutExercise(@PathVariable Long id) {
+    public ModelAndView viewWorkoutExercise(@PathVariable Long id,
+                                            @RequestParam(required = false) Long setId) {
+
         WorkoutExercise we = workoutExerciseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
 
-        ModelAndView mav = new ModelAndView("SingleExerciseHistoryPage");
+        Workout workout = we.getWorkout();
 
-        mav.addObject("workoutExercise", we); // Ensure we pass the entire WorkoutExercise object
+        ModelAndView mav = new ModelAndView("EditWorkoutExercisePage");
+
+        // Basic workoutExercise info
+        mav.addObject("workoutExercise", we);
+        mav.addObject("workout", we.getWorkout());
+        mav.addObject("workoutExerciseId", we.getId());
+        mav.addObject("exerciseName", we.getExercise().getExerciseName());
+        mav.addObject("exerciseId", we.getExercise().getId());
+
+        // Fetch all sets for this workoutExercise
+        mav.addObject("sets", setRepository.findByWorkoutExerciseIdOrderBySetNumberAsc(we));
+
+        // If editing a specific set
+        if (setId != null) {
+            Set selectedSet = setRepository.findById(setId).orElseThrow(() -> new RuntimeException("Set not found"));
+            mav.addObject("selectedSet", selectedSet);
+        }
+
+        mav.addObject("completedDate", workout.getEndedAt());
 
         return mav;
     }
+
 
 }

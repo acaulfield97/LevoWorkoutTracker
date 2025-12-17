@@ -144,7 +144,7 @@
                     th:text="${#lists.size(we.sets)} + ' sets'"></span>
 
                     <a class="btn btn-sm btn-outline-primary"
-                       th:href="@{'/workout-exercise/' + ${we.id}}">
+                       th:href="@{/workout-exercise/{id}(id=${we.id})}">
                         <i class="bi bi-pencil-square"></i>
                     </a>
                 </div>
