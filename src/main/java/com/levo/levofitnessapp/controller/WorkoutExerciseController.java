@@ -60,7 +60,7 @@ public class WorkoutExerciseController {
         WorkoutExercise we = workoutExerciseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
 
-        ModelAndView mav = new ModelAndView("SingleExerciseHistoryPage");
+        ModelAndView mav = new ModelAndView("WorkoutExerciseHistoryPage");
 
         mav.addObject("workoutExercise", we); // Ensure we pass the entire WorkoutExercise object
 
