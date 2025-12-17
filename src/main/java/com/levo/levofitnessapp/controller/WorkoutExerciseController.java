@@ -57,15 +57,14 @@ public class WorkoutExerciseController {
      */
     @GetMapping("/{id}")
     public ModelAndView viewWorkoutExercise(@PathVariable Long id) {
-
         WorkoutExercise we = workoutExerciseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
 
-        ModelAndView mav = new ModelAndView("WorkoutExerciseHistoryPage");
+        ModelAndView mav = new ModelAndView("SingleExerciseHistoryPage");
 
-        // Template expects a workout with workoutExercises
-        mav.addObject("workout", we.getWorkout());
+        mav.addObject("workoutExercise", we); // Ensure we pass the entire WorkoutExercise object
 
         return mav;
     }
+
 }
