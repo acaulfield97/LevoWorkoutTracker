@@ -1,9 +1,6 @@
 package com.levo.levofitnessapp.controller;
 
-import com.levo.levofitnessapp.model.Exercise;
 import com.levo.levofitnessapp.model.Workout;
-import com.levo.levofitnessapp.model.WorkoutExercise;
-import com.levo.levofitnessapp.repository.WorkoutExerciseRepository;
 import com.levo.levofitnessapp.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,13 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -92,8 +84,8 @@ public class WorkoutHistoryController {
 
     // Show calendar view of workouts
     @GetMapping("/calendar")
-    public String showCalendar(Model model) {
-        var days = workoutRepository.findWorkoutDays();
+    public String showCalendar(@ModelAttribute("currentUserId") Long userId, Model model) {
+        var days = workoutRepository.findWorkoutDaysByUser(userId);
 
         // Convert to "YYYY-MM-DD" strings
         var workoutDays = days.stream().map(java.sql.Date::toString).toList();
@@ -101,5 +93,6 @@ public class WorkoutHistoryController {
         return "WorkoutCalendarPage";
     }
 }
+
 
 
