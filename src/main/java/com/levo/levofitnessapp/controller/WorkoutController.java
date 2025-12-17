@@ -17,6 +17,7 @@ public class WorkoutController {
     @Autowired
     private WorkoutRepository workoutRepository;
 
+    // Start a new workout session
     @PostMapping("/start")
     public RedirectView startWorkout(@ModelAttribute("currentUserId") Long userId) {
         Workout workout = new Workout();
@@ -26,6 +27,7 @@ public class WorkoutController {
         return new RedirectView("/exercise");
     }
 
+    // Finish the current workout session
     @PostMapping("/finish")
     public RedirectView finishWorkout(@ModelAttribute("currentUserId") Long userId) {
 
@@ -38,6 +40,7 @@ public class WorkoutController {
         return new RedirectView("/");
     }
 
+    // Delete a workout session by ID
     @PostMapping("/delete/{id}")
     public RedirectView deleteWorkout(@PathVariable Long id) {
 

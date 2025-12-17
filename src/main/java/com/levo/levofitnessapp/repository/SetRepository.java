@@ -16,6 +16,7 @@ public interface SetRepository extends CrudRepository<Set, Long> {
     // Order sets by setNumber ascending
     Iterable<Set> findByWorkoutExerciseIdOrderBySetNumberAsc(WorkoutExercise workoutExercise);
 
+    // Get max weight for a given exercise across all workouts
     @Query("""
           SELECT new com.levo.levofitnessapp.dto.ExercisePoint(w.startedAt, MAX(s.weightKg))
           FROM Set s

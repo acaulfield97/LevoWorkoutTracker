@@ -16,11 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/workout-exercise")
 public class WorkoutExerciseController {
 
+    // Repositories
     private final WorkoutExerciseRepository workoutExerciseRepository;
     private final WorkoutRepository workoutRepository;
     private final ExerciseRepository exerciseRepository;
     private final SetRepository setRepository;
 
+    // Constructor
     public WorkoutExerciseController(WorkoutExerciseRepository workoutExerciseRepository,
                                      WorkoutRepository workoutRepository,
                                      ExerciseRepository exerciseRepository,
@@ -31,21 +33,22 @@ public class WorkoutExerciseController {
         this.setRepository = setRepository;
     }
 
-    /**
-     * Add an exercise to the active workout
-     */
+    // Add an exercise to the current workout
     @PostMapping
     public ModelAndView saveWorkoutExercise(@ModelAttribute("currentUserId") Long userId,
                                             @RequestParam Long exerciseId) {
 
+        // Find the active workout for the user
         Workout workout = workoutRepository
                 .findByUserIdAndEndedAtIsNull(userId)
                 .orElseThrow(() -> new RuntimeException("No active workout found"));
 
+        // Find the exercise by ID
         Exercise exercise = exerciseRepository
                 .findById(exerciseId)
                 .orElseThrow(() -> new RuntimeException("Exercise not found"));
 
+        // Create and save the WorkoutExercise
         WorkoutExercise workoutExercise = new WorkoutExercise();
         workoutExercise.setWorkout(workout);
         workoutExercise.setExercise(exercise);
@@ -57,15 +60,18 @@ public class WorkoutExerciseController {
         );
     }
 
+    // View and edit a specific workout exercise
     @GetMapping("/{id}")
     public ModelAndView viewWorkoutExercise(@PathVariable Long id,
                                             @RequestParam(required = false) Long setId) {
 
+        // Fetch the WorkoutExercise by ID
         WorkoutExercise we = workoutExerciseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
 
         Workout workout = we.getWorkout();
 
+        // Prepare the ModelAndView
         ModelAndView mav = new ModelAndView("EditWorkoutExercisePage");
 
         // Basic workoutExercise info
@@ -89,15 +95,17 @@ public class WorkoutExerciseController {
         return mav;
     }
 
-    
+    // Delete a workout exercise
     @PostMapping("/delete")
     public ModelAndView deleteWorkoutExercise(
             @RequestParam Long workoutExerciseId) {
 
+        // Fetch the WorkoutExercise by ID
         WorkoutExercise workoutExercise =
                 workoutExerciseRepository.findById(workoutExerciseId)
                         .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
 
+        // Delete the WorkoutExercise
         workoutExerciseRepository.delete(workoutExercise);
 
         return new ModelAndView("redirect:/exercise");

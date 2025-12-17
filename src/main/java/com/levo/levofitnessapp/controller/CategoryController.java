@@ -16,6 +16,7 @@ public class CategoryController {
         this.categoryRepository = categoryRepository;
     }
 
+    // Endpoint to list all categories
     @GetMapping
     public Iterable<Category> listCategories() {
         return categoryRepository.findAll();

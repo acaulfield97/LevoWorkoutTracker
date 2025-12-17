@@ -17,10 +17,12 @@ import java.util.List;
 @RequestMapping("/exercise-history")
 public class ExerciseHistoryController {
 
+    // Repositories
     private final WorkoutExerciseRepository workoutExerciseRepository;
     private final ExerciseRepository exerciseRepository;
     private final SetRepository setRepository;
 
+    // Constructor
     @Autowired
     public ExerciseHistoryController(WorkoutExerciseRepository workoutExerciseRepository,
                                      ExerciseRepository exerciseRepository,
@@ -30,6 +32,7 @@ public class ExerciseHistoryController {
         this.setRepository = setRepository;
     }
 
+    // Show exercise history for a specific exercise
     @GetMapping
     public String showHistory(@RequestParam Long exerciseId,
                               @ModelAttribute("currentUserId") Long userId,
@@ -48,6 +51,7 @@ public class ExerciseHistoryController {
                         .reversed()
         );
 
+        // add to model
         model.addAttribute("workoutExercises", workoutExercise);
         model.addAttribute("exercise", exercise);
 
@@ -55,15 +59,18 @@ public class ExerciseHistoryController {
 
     }
 
+
+    // Show analytics for a specific exercise
     @GetMapping("/{exerciseId}/analytics")
     public String exerciseAnalytics(@PathVariable Long exerciseId, Model model) {
 
-        // load exercise + workoutExercises
+        // load exercise
         Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow();
 
-        // Pull chart points
+        // create a list of data points for the exercise
         List<ExercisePoint> points = setRepository.findExerciseWeightPoints(exerciseId);
 
+        // add to model
         model.addAttribute("exercise", exercise);
         model.addAttribute("points", points);
         return "ExerciseAnalyticsPage";

@@ -62,6 +62,7 @@ public class WorkoutHistoryController {
         return "WorkoutHistoryPage";
     }
 
+    // Delete a workout by ID
     @PostMapping("/delete/{id}")
     public RedirectView deleteWorkout(@PathVariable Long id) {
 
@@ -70,6 +71,7 @@ public class WorkoutHistoryController {
         return new RedirectView("/history");
     }
 
+    // Show details for a specific workout
     @GetMapping("/details/{id}")
     public String showDetails(@PathVariable Long id,
                               @ModelAttribute("currentUserId") Long userId,

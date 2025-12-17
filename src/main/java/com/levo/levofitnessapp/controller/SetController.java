@@ -15,29 +15,33 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/set")
 public class SetController {
 
+    // Repositories
     private final SetRepository setRepository;
     private final WorkoutExerciseRepository workoutExerciseRepository;
 
+    // Constructor
     public SetController(SetRepository setRepository,
                          WorkoutExerciseRepository workoutExerciseRepository) {
         this.setRepository = setRepository;
         this.workoutExerciseRepository = workoutExerciseRepository;
     }
 
+    // return the create sets page for a specific workout exercise
     @GetMapping("")
     public ModelAndView setPage(@RequestParam Long workoutExerciseId,
                                 @RequestParam(required = false) Long setId) {
 
+        // create model and find workout exercise
         ModelAndView mav = new ModelAndView("create_sets");
-
         WorkoutExercise we = workoutExerciseRepository.findById(workoutExerciseId).orElseThrow();
 
+        // add objects to model - workout exercise, existing sets, and exercise name and id
         mav.addObject("workoutExerciseId", workoutExerciseId);
         mav.addObject("exerciseName", we.getExercise().getExerciseName());
         mav.addObject("exerciseId", we.getExercise().getId());
         mav.addObject("sets", setRepository.findByWorkoutExerciseIdOrderBySetNumberAsc(we));
 
-
+        // if setId is provided, add the selected set to the model for editing
         if (setId != null) {
             Set selectedSet = setRepository.findById(setId).orElseThrow();
             mav.addObject("selectedSet", selectedSet);
@@ -46,6 +50,8 @@ public class SetController {
         return mav;
     }
 
+
+    // Save or update a set
     @PostMapping("")
     public ModelAndView saveSet(@RequestParam Long workoutExerciseId,
                                 @RequestParam Long exerciseId,
@@ -53,11 +59,12 @@ public class SetController {
                                 @RequestParam int reps,
                                 @RequestParam(required = false) Long setId) { // <-- added setId
 
+        // Find the associated workout exercise
         WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
                 .orElseThrow(() -> new RuntimeException("No workout exercise found"));
-
         Set set;
 
+        // Check if we're updating an existing set or creating a new one
         if (setId != null) {
             // Updating existing set
             set = setRepository.findById(setId)
@@ -75,6 +82,7 @@ public class SetController {
             set.setReps(reps);
         }
 
+        // Save the set
         setRepository.save(set);
 
         return new ModelAndView(
@@ -83,16 +91,18 @@ public class SetController {
         );
     }
 
+    // Delete a set
     @PostMapping("/delete")
     public ModelAndView deleteSet(@RequestParam Long workoutExerciseId,
                                   @RequestParam Long setId) {
 
+        // Find the workout exercise and the set to delete
         WorkoutExercise workoutExercise = workoutExerciseRepository.findById(workoutExerciseId)
                 .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
-
         Set setToDelete = setRepository.findById(setId)
                 .orElseThrow(() -> new RuntimeException("Set not found"));
 
+        // Delete the set
         setRepository.delete(setToDelete);
 
         // Fetch remaining sets in order
@@ -105,6 +115,7 @@ public class SetController {
             set.setSetNumber(setNumber++);
         }
 
+        // Save updated sets
         setRepository.saveAll(remainingSets);
 
         return new ModelAndView(

@@ -24,12 +24,14 @@ import java.util.Map;
 @RequestMapping("/exercise") // the base route
 public class ExerciseController {
 
+    // repositories
     private final ExerciseRepository exerciseRepository;
     private final CategoryRepository categoryRepository;
     private final WorkoutRepository workoutRepository;
     private final WorkoutExerciseRepository workoutExerciseRepository;
     private final SetRepository setRepository;
 
+    // constructor injection
     @Autowired
     public ExerciseController(ExerciseRepository exerciseRepository,
                               CategoryRepository categoryRepository,
@@ -43,6 +45,7 @@ public class ExerciseController {
         this.setRepository = setRepository;
     }
 
+    // main exercise page where user can select category and exercise
     @GetMapping("")
     public ModelAndView exercisePage(@RequestParam(required = false) Long categoryId,
                                      @RequestParam(required = false) Long exerciseId,
@@ -74,6 +77,7 @@ public class ExerciseController {
             setsMap.put(workoutExercise.getId(), sets);
         }
 
+        // prepare model and view
         ModelAndView modelAndView = new ModelAndView("/create_exercise");
         modelAndView.addObject("categories", categories);
         modelAndView.addObject("exercises", exercises);
@@ -87,6 +91,7 @@ public class ExerciseController {
 
         return modelAndView;
     }
+
 
     // page where user can create a new exercise
     @GetMapping("/new")
@@ -116,15 +121,11 @@ public class ExerciseController {
         exercise.setCategory(category);
         exerciseRepository.save(exercise);
 
-        // Redirect back to /exercise with the selected category
-        //return new RedirectView("/exercise?categoryId=" + categoryId);
-
+        // Redirect back to /exercise page
         return new RedirectView("/exercise");
     }
 
     // this then routes to new sets page: /exercise/exercise-set?categoryId=1&exerciseId=2
-    // possibly needs refactored for clarity???
-    // e.g. instead just route to /set ? idk
     @GetMapping("/exercise-set")
     public ModelAndView showExerciseSet(@RequestParam Long exerciseId,
                                         @ModelAttribute("currentUserId") Long userId) {
@@ -137,6 +138,7 @@ public class ExerciseController {
         Workout workout = workoutRepository.findByUserIdAndEndedAtIsNull(userId)
                 .orElseThrow(() -> new RuntimeException("Workout not found"));
 
+        // prepare model and view
         ModelAndView modelAndView = new ModelAndView("/create_sets");
         modelAndView.addObject("exercise", exercise);
         modelAndView.addObject("workoutId", workout.getId());

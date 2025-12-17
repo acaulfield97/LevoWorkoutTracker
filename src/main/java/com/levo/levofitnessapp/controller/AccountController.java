@@ -27,11 +27,13 @@ public class AccountController {
     @Value("${okta.oauth2.client-id}")
     private String clientId;
 
+    // constructor injection
     public AccountController(CurrentUserService currentUserService, UserRepository userRepository) {
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
     }
 
+    // display account page
     @GetMapping("")
     public String accountPage(Model model, Authentication authentication) {
         User user = currentUserService.getCurrentUser(authentication);
@@ -41,6 +43,7 @@ public class AccountController {
         return "account";
     }
 
+    // handle username update
     @PostMapping("/update-username")
     public String updateUsername(Authentication authentication,
                                  @RequestParam String username,
@@ -48,6 +51,7 @@ public class AccountController {
 
         var user = currentUserService.getCurrentUser(authentication);
 
+        // update username if user exists
         if (user != null) {
             user.setUsername(username);
             userRepository.save(user);
@@ -55,7 +59,6 @@ public class AccountController {
 
         // flash attribute = success msg shown once, then removed
         redirectAttributes.addFlashAttribute("success", true);
-
         return "redirect:/account?success";
     }
 }
