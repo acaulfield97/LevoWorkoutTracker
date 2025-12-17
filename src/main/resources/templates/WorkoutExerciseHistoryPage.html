@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <title th:text="${workoutExercise.exercise.exerciseName}">Exercise</title>
+    <meta charset="UTF-8" />
+    <title>Workout on <span th:text="${#temporals.format(workout.startedAt, 'dd MMM yyyy')}"></span></title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet" />
 
     <style>
         body {
@@ -16,129 +16,161 @@
         .page-shell { max-width: 720px; }
 
         .card-modern {
-          background: rgba(255,255,255,.95);
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(8px);
           border-radius: 16px;
-          padding: 20px;
-          box-shadow: 0 8px 20px rgba(0,0,0,.05);
+          padding: 18px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         }
 
-        .exercise-title {
+        .page-title {
           font-weight: 800;
+          letter-spacing: -0.02em;
           margin-bottom: .25rem;
         }
 
-        .exercise-meta {
+        .page-subtitle {
           color: #6c757d;
-          margin-bottom: 1rem;
+          margin-bottom: 1.25rem;
         }
 
-        .set-card {
-          border-radius: 14px;
-          padding: 16px;
-          background: rgba(0,0,0,.03);
+        .workout-card { animation: fadeIn .35s ease; }
+
+        .workout-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: .75rem;
+          padding-bottom: .75rem;
+          margin-bottom: .75rem;
+          border-bottom: 1px solid rgba(0,0,0,0.06);
         }
 
-        .danger-zone {
-          border: 1px solid #dc3545;
-          border-radius: 14px;
-          padding: 16px;
+        .workout-date {
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+        }
+
+        .badge-soft {
+          background: rgba(13, 110, 253, 0.10);
+          color: #0d6efd;
+          border-radius: 999px;
+          padding: .35rem .6rem;
+          font-weight: 600;
+          font-size: .85rem;
+          white-space: nowrap;
+        }
+
+        /* Exercise + sets styling (mirrors your category-list look) */
+        .exercise-title {
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+          font-weight: 700;
+          margin: 0;
+        }
+
+        .set-list {
+          list-style: none;
+          padding-left: 0;
+          margin: 0;
+          display: grid;
+          gap: .5rem;
+        }
+
+        .set-item {
+          padding: .6rem .75rem;
+          border-radius: 12px;
+          background: rgba(0,0,0,0.03);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: .75rem;
+        }
+
+        .set-left {
+          display: flex;
+          align-items: center;
+          gap: .6rem;
+          font-weight: 600;
+        }
+
+        .set-meta {
+          display: flex;
+          align-items: center;
+          gap: .35rem;
+          color: #6c757d;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .empty-state {
+          color: #6c757d;
+          margin: 0;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
-<div th:replace="~{fragments/mobile_navbar :: mobileNavbar('history')}"></div>
+<div th:replace="fragments/mobile_navbar :: mobileNavbar('history')"></div>
 
 <div class="container mt-4 page-shell">
 
-    <div class="card-modern">
-
-        <!-- Exercise header -->
-        <h1 class="exercise-title"
-            th:text="${workoutExercise.exercise.exerciseName}">
-            Exercise Name
+    <div class="text-center mb-3">
+        <h1 class="page-title">
+            Workout on <span th:text="${#temporals.format(workout.startedAt, 'dd MMM yyyy')}"></span>
         </h1>
-
-        <div class="exercise-meta">
-            Category:
-            <span th:text="${workoutExercise.exercise.category.categoryName}"></span>
-        </div>
-
-        <!-- Notes -->
-        <form th:action="@{/workout-exercise/{id}/notes(id=${workoutExercise.id})}" method="post">
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Notes</label>
-                <textarea class="form-control"
-                          name="notes"
-                          rows="3"
-                          th:text="${workoutExercise.notes}">
-                </textarea>
-            </div>
-
-            <button class="btn btn-outline-primary w-100 mb-4">
-                <i class="bi bi-check-circle"></i>
-                Save Notes
-            </button>
-        </form>
-
-        <!-- Sets -->
-        <h5 class="fw-bold mb-3">Sets</h5>
-
-        <div class="d-grid gap-3">
-            <div th:each="s : ${sets}" class="set-card">
-
-                <form th:action="@{/set}" method="post">
-
-                    <input type="hidden" name="workoutExerciseId"
-                           th:value="${workoutExercise.id}"/>
-                    <input type="hidden" name="setId"
-                           th:value="${s.id}"/>
-                    <input type="hidden" name="exerciseId"
-                           th:value="${workoutExercise.exercise.id}"/>
-
-                    <div class="fw-semibold mb-2">
-                        Set <span th:text="${s.setNumber}"></span>
-                    </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col">
-                            <label class="form-label">Reps</label>
-                            <input type="number"
-                                   class="form-control"
-                                   name="reps"
-                                   th:value="${s.reps}"/>
-                        </div>
-
-                        <div class="col">
-                            <label class="form-label">Weight (kg)</label>
-                            <input type="number"
-                                   class="form-control"
-                                   name="weightKg"
-                                   th:value="${s.weightKg}"/>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-outline-primary w-100">
-                        Update
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Delete exercise -->
-        <div class="danger-zone mt-4 text-center">
-            <form th:action="@{/workout-exercise/{id}/delete(id=${workoutExercise.id})}"
-                  method="post"
-                  onsubmit="return confirm('Delete this exercise from the workout?');">
-
-                <button class="btn btn-outline-danger w-100">
-                    <i class="bi bi-trash"></i>
-                    Delete Exercise
-                </button>
-            </form>
-        </div>
-
+        <p class="page-subtitle mb-0">See every exercise and set in your workout</p>
     </div>
+
+    <div class="d-grid gap-3">
+        <div th:each="we : ${workout.workoutExercises}" class="card-modern workout-card">
+
+            <div class="workout-header">
+                <p class="exercise-title">
+                    <i class="bi bi-activity"></i>
+                    <span th:text="${we.exercise.exerciseName}">Exercise name</span>
+                </p>
+
+                <div class="d-flex align-items-center gap-2">
+                <span class="badge-soft"
+                    th:text="${#lists.size(we.sets)} + ' sets'"></span>
+
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{'/workout-exercise/' + ${we.id}}">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </div>
+            </div>
+
+            <ul class="set-list" th:if="${!#lists.isEmpty(we.sets)}">
+                <li class="set-item" th:each="s : ${we.sets}">
+                    <div class="set-left">
+              <span class="badge text-bg-light border">
+                <span th:text="'Set ' + ${s.setNumber}"></span>
+              </span>
+                        <span th:text="${s.weightKg} + ' kg'"></span>
+                    </div>
+
+                    <div class="set-meta">
+                        <i class="bi bi-arrow-repeat"></i>
+                        <span th:text="${s.reps} + ' reps'"></span>
+                    </div>
+                </li>
+            </ul>
+
+            <p class="empty-state" th:if="${#lists.isEmpty(we.sets)}">No sets recorded.</p>
+
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
