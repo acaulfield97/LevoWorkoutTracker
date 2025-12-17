@@ -184,4 +184,46 @@ class ExerciseControllerTest {
         when(workoutRepository.findByUserIdAndEndedAtIsNull(userId)).thenReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> controller.showExerciseSet(1L, userId));
     }
+
+    @Test
+    void includesSelectedExerciseIdWhenProvided() {
+        ExerciseRepository exerciseRepository = mock(ExerciseRepository.class);
+        CategoryRepository categoryRepository = mock(CategoryRepository.class);
+        WorkoutRepository workoutRepository = mock(WorkoutRepository.class);
+        WorkoutExerciseRepository workoutExerciseRepository = mock(WorkoutExerciseRepository.class);
+        SetRepository setRepository = mock(SetRepository.class);
+
+        ExerciseController controller = new ExerciseController(exerciseRepository, categoryRepository, workoutRepository, workoutExerciseRepository, setRepository);
+
+        Long userId = 7L;
+        Long selectedExerciseId = 55L;
+
+        Iterable<Category> allCategories = List.of(new Category());
+        when(categoryRepository.findAll()).thenReturn(allCategories);
+        when(workoutRepository.findByUserIdAndEndedAtIsNull(userId)).thenReturn(Optional.empty());
+
+        ModelAndView mv = controller.exercisePage(null, selectedExerciseId, userId);
+
+        assertEquals("/create_exercise", mv.getViewName());
+        assertEquals(selectedExerciseId, mv.getModel().get("selectedExerciseId"));
+    }
+
+    @Test
+    void showCreateExercisePageReturnsAddNewExerciseViewWithCategories() {
+        ExerciseRepository exerciseRepository = mock(ExerciseRepository.class);
+        CategoryRepository categoryRepository = mock(CategoryRepository.class);
+        WorkoutRepository workoutRepository = mock(WorkoutRepository.class);
+        WorkoutExerciseRepository workoutExerciseRepository = mock(WorkoutExerciseRepository.class);
+        SetRepository setRepository = mock(SetRepository.class);
+
+        ExerciseController controller = new ExerciseController(exerciseRepository, categoryRepository, workoutRepository, workoutExerciseRepository, setRepository);
+
+        Iterable<Category> categories = List.of(new Category(), new Category());
+        when(categoryRepository.findAll()).thenReturn(categories);
+
+        ModelAndView mv = controller.showCreateExercisePage();
+
+        assertEquals("/add_new_exercise", mv.getViewName());
+        assertSame(categories, mv.getModel().get("categories"));
+    }
 }
