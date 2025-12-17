@@ -57,22 +57,6 @@ public class WorkoutExerciseController {
         );
     }
 
-//    /**
-//     * View a single workout exercise (history + sets) for editing or adding sets
-//     */
-//    @GetMapping("/{id}")
-//    public ModelAndView viewWorkoutExercise(@PathVariable Long id) {
-//        WorkoutExercise we = workoutExerciseRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("WorkoutExercise not found"));
-//
-//        ModelAndView mav = new ModelAndView("EditWorkoutExercisePage");
-//
-//        mav.addObject("workoutExercise", we);
-//        mav.addObject("workout", we.getWorkout());
-//
-//        return mav;
-//    }
-
     @GetMapping("/{id}")
     public ModelAndView viewWorkoutExercise(@PathVariable Long id,
                                             @RequestParam(required = false) Long setId) {
@@ -104,6 +88,5 @@ public class WorkoutExerciseController {
 
         return mav;
     }
-
 
 }

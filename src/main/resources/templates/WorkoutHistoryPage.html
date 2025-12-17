@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Workout History</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -112,7 +113,20 @@
 <div class="container mt-4 page-shell">
 
     <div class="text-center mb-3">
-        <h1 class="page-title">Workout history</h1>
+        <h1 class="page-title">Workout History</h1>
+
+        <div class="d-flex justify-content-center mt-2">
+            <a th:href="@{/history/calendar}"
+               class="btn btn-outline-primary btn-soft d-inline-flex align-items-center gap-2">
+                <i class="bi bi-calendar-week"></i>
+                Calendar view
+            </a>
+        </div>
+
+        <p class="page-subtitle mb-0" th:if="${selectedDate != null}">
+            Showing workouts for <span th:text="${#temporals.format(selectedDate, 'dd MMM yyyy')}"></span>
+            · <a th:href="@{/history}">Clear filter</a>
+        </p>
     </div>
 
     <div class="d-grid gap-3">

@@ -67,7 +67,7 @@
         </form>
 
         <form th:if="${activeWorkout != null}" method="get" th:action="@{/exercise}">
-            <button type="submit" class="btn btn-primary">ADD ANOTHER EXERCISE</button>
+            <button type="submit" class="btn btn-primary">EDIT WORKOUT</button>
         </form>
 
         <form th:if="${activeWorkout != null}" method="post" th:action="@{/workout/delete/{id}(id=${activeWorkout.id})}">

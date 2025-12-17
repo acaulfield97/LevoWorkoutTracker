@@ -27,7 +27,12 @@ public class WorkoutExercise {
 
     private String notes;
 
-    @OneToMany(mappedBy = "workoutExerciseId", fetch = FetchType.LAZY)
+    @OneToMany(
+            mappedBy = "workoutExerciseId",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     @OrderBy("setNumber ASC")
     private List<Set> sets = new ArrayList<>();
 

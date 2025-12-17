@@ -18,23 +18,66 @@
 
 <div class="container mt-5">
     <!-- Current workout section -->
-    <div th:if="${!#lists.isEmpty(workoutExercises)}">
-        <h2>Current workout</h2>
-        <ul class="list-group">
-            <li class="list-group-item" th:each="workoutExercise : ${workoutExercises}">
-                <strong th:text="${workoutExercise.exercise.exerciseName}"></strong>
+    <div th:if="${!#lists.isEmpty(workoutExercises)}" class="mb-4">
+        <h5 class="fw-bold mb-3 text-center">Current Workout</h5>
 
-                <!-- Show sets -->
-                <ul>
-                    <li th:each="set: ${setsMap[workoutExercise.id]}">
-                        <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
-                        <span th:text="${set.weightKg} + ' kg'"></span>
-                        <span th:text="' x ' + ${set.reps} + ' reps'"></span>
-                    </li>
-                </ul>
-            </li>
+        <div class="card shadow-sm rounded-4">
+            <ul class="list-group list-group-flush">
+
+                <th:block th:each="workoutExercise : ${workoutExercises}">
+                    <li class="list-group-item py-3">
+
+                        <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap flex-sm-nowrap">
+
+                        <!-- Exercise name -->
+                        <strong class="fs-6 lh-sm">
+                            <span th:text="${workoutExercise.exercise.exerciseName}"></span>
+                        </strong>
+
+                        <!-- Buttons -->
+                        <div class="d-flex align-items-center gap-2">
+
+                            <!-- Resume -->
+                            <a class="btn btn-outline-primary btn-sm d-flex align-items-center"
+                               th:href="@{/set(workoutExerciseId=${workoutExercise.id})}">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+
+                            <!-- Delete -->
+                            <form th:action="@{/workout-exercise/delete}"
+                                  method="post"
+                                  class="m-0"
+                                  th:onsubmit="return confirm('Remove this exercise from the workout?');">
+
+                                <input type="hidden"
+                                       name="workoutExerciseId"
+                                       th:value="${workoutExercise.id}" />
+
+                                <button type="submit"
+                                        class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sets -->
+                    <ul class="mt-2 mb-0 ps-3 small text-muted">
+                        <li th:each="set : ${setsMap[workoutExercise.id]}">
+                            <span th:text="'Set ' + ${set.setNumber} + ': '"></span>
+                            <span th:text="${set.weightKg} + ' kg'"></span>
+                            <span th:text="' x ' + ${set.reps} + ' reps'"></span>
+                        </li>
+                    </ul>
+
+                </li>
+            </th:block>
+
+
+
         </ul>
     </div>
+</div>
 
     <h2 class="text-center mb-3 fw-bold">Select an Exercise</h2>
     <p class="text-center text-muted mb-4">Choose a category and exercise to continue</p>

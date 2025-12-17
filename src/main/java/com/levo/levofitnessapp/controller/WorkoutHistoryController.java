@@ -1,26 +1,21 @@
 package com.levo.levofitnessapp.controller;
 
-import com.levo.levofitnessapp.model.Exercise;
 import com.levo.levofitnessapp.model.Workout;
-import com.levo.levofitnessapp.model.WorkoutExercise;
-import com.levo.levofitnessapp.repository.WorkoutExerciseRepository;
 import com.levo.levofitnessapp.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 @RequestMapping("/history")
@@ -30,10 +25,23 @@ public class WorkoutHistoryController {
     private WorkoutRepository workoutRepository;
 
     @GetMapping
-    public String showHistory(Model model) {
+    public String showHistory(@RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date,
+                              @ModelAttribute("currentUserId") Long userId,
+                              Model model) {
 
         // create workouts object and empty categories object
-        List<Workout> workouts = workoutRepository.findAllByOrderByStartedAtDesc();
+        List<Workout> workouts;
+
+        // if a date is provided, filter workouts to only those on that date
+        if (date != null) {
+            var start = date.atStartOfDay();
+            var end = date.plusDays(1).atStartOfDay();
+            workouts = workoutRepository.findAllByUserIdAndStartedAtBetweenOrderByStartedAtDesc(userId, start, end);
+            model.addAttribute("selectedDate", date);
+        } else {
+            workouts = workoutRepository.findAllByUserIdOrderByStartedAtDesc(userId);
+        }
+
         Map<Long, List<String>> workoutCategories = new HashMap<>();
 
         // loop through workouts to get a list of distinct category names
@@ -63,14 +71,28 @@ public class WorkoutHistoryController {
     }
 
     @GetMapping("/details/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String showDetails(@PathVariable Long id,
+                              @ModelAttribute("currentUserId") Long userId,
+                              Model model) {
 
-        Workout workout = workoutRepository.findByIdWithExercises(id)
-                .orElseThrow(() -> new IllegalArgumentException("Workout not found: " + id));
+        Workout workout = workoutRepository.findByIdAndUserIdWithExercises(id, userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Workout not found: " + id));
 
         model.addAttribute("workout", workout);
         return "WorkoutExerciseHistoryPage";
     }
+
+    // Show calendar view of workouts
+    @GetMapping("/calendar")
+    public String showCalendar(@ModelAttribute("currentUserId") Long userId, Model model) {
+        var days = workoutRepository.findWorkoutDaysByUser(userId);
+
+        // Convert to "YYYY-MM-DD" strings
+        var workoutDays = days.stream().map(java.sql.Date::toString).toList();
+        model.addAttribute("workoutDays", workoutDays);
+        return "WorkoutCalendarPage";
+    }
 }
+
 
 
