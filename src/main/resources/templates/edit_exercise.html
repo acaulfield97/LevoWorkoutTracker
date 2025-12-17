@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercise Details</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+          background: linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
+          min-height: 100vh;
+        }
+        .page-shell { max-width: 720px; }
+        .card-modern {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 16px;
+          padding: 18px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+        .set-row {
+          background: rgba(0,0,0,0.03);
+          border-radius: 12px;
+          padding: .75rem;
+          margin-bottom: .5rem;
+        }
+        .actions {
+          display: flex;
+          gap: .75rem;
+          margin-top: 1rem;
+        }
+        .btn-soft {
+          border-radius: 14px;
+          padding: .85rem 1rem;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="fragments/mobile_navbar :: mobileNavbar('home')"></div>
+
+<div class="container mt-4 page-shell">
+
+    <div class="card-modern">
+
+        <h2 class="fw-bold mb-1"
+            th:text="${workoutExercise.exercise.exerciseName}">
+        </h2>
+
+        <p class="text-muted mb-2">
+            Category:
+            <span th:text="${workoutExercise.exercise.category.categoryName}"></span>
+        </p>
+
+        <!-- Notes -->
+        <form th:action="@{/workout-exercise/update}" method="post">
+            <input type="hidden" name="id" th:value="${workoutExercise.id}"/>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Notes</label>
+                <textarea name="notes"
+                          class="form-control"
+                          rows="2"
+                          th:text="${workoutExercise.notes}">
+                </textarea>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-outline-primary btn-soft w-100 mb-3">
+                <i class="bi bi-check-circle"></i> Save Notes
+            </button>
+        </form>
+
+        <!-- Sets -->
+        <h5 class="fw-semibold mb-2">Sets</h5>
+
+        <div th:each="set : ${workoutExercise.sets}" class="set-row">
+
+            <form th:action="@{/workout-exercise/set/update}" method="post"
+                  class="row g-2 align-items-end">
+
+                <input type="hidden" name="setId" th:value="${set.id}"/>
+
+                <div class="col-12 col-md-2 fw-semibold">
+                    Set <span th:text="${set.setNumber}"></span>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <label class="form-label">Reps</label>
+                    <input type="number"
+                           name="reps"
+                           class="form-control"
+                           min="1"
+                           th:value="${set.reps}">
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <label class="form-label">Weight (kg)</label>
+                    <input type="number"
+                           name="weightKg"
+                           class="form-control"
+                           min="0"
+                           th:value="${set.weightKg}">
+                </div>
+
+                <div class="col-12 col-md-2">
+                    <button type="submit"
+                            class="btn btn-outline-primary btn-soft w-100">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <form th:action="@{'/workout-exercise/delete/' + ${workoutExercise.id}}"
+                  method="post" class="flex-fill">
+                <button type="submit"
+                        class="btn btn-outline-danger btn-soft w-100"
+                        onclick="return confirm('Remove this exercise from the workout?');">
+                    <i class="bi bi-trash"></i> Delete Exercise
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
