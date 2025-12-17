@@ -144,9 +144,17 @@
                     <span th:text="${#temporals.format(we.workout.startedAt, 'dd MMM yyyy HH:mm')}"></span>
                 </div>
 
-                <span class="badge-soft"
-                      th:text="${#lists.size(we.sets)} + ' sets'"></span>
+                <div class="d-flex align-items-center gap-2">
+        <span class="badge-soft"
+              th:text="${#lists.size(we.sets)} + ' sets'"></span>
+
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{'/workout-exercise/' + ${we.id}}">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </div>
             </div>
+
 
             <ul class="set-list" th:if="${!#lists.isEmpty(we.sets)}">
                 <li class="set-item" th:each="s : ${we.sets}">
