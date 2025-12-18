@@ -51,19 +51,19 @@
 
     <!-- APP LOGO -->
     <div class="app-logo">L</div>
-    <h1 class="fw-bold mb-2">Welcome to Levo!</h1>
-    <p class="text-muted mb-4">Track your workouts and exercises.</p>
+    <h1 class="fw-bold mb-2">LEVO</h1>
+    <p class="text-muted mb-3">Track your workouts and exercises.</p>
 
     <div class="d-flex flex-column gap-3 w-100" style="max-width: 300px;">
 
         <!-- No active workout -> show START WORKOUT -->
         <form th:if="${activeWorkout == null}" method="post" th:action="@{/workout/start}">
-            <button type="submit" class="btn btn-primary">START WORKOUT</button>
+            <button type="submit" class="btn btn-primary btn-lg">START WORKOUT</button>
         </form>
 
         <!-- Active workout -> show END WORKOUT -->
         <form th:if="${activeWorkout != null}" method="post" th:action="@{/workout/finish}">
-            <button type="submit" class="btn btn-primary">FINISH WORKOUT</button>
+            <button type="submit" class="btn btn-success">FINISH WORKOUT</button>
         </form>
 
         <form th:if="${activeWorkout != null}" method="get" th:action="@{/exercise}">

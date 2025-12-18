@@ -58,12 +58,12 @@
 
 <div class="container mt-4" style="max-width: 500px">
 
-    <div class="text-center mb-4">
+    <div class="text-center mb-3">
         <!-- Exercise Name -->
-        <h1 class="fw-bold display-6 mb-4" th:text="${exerciseName}"></h1>
+        <h1 class="fw-bold display-6 mb-2" th:text="${exerciseName}"></h1>
 
         <!-- Workout Date -->
-        <p class="text-muted mb-2">
+        <p class="text-muted mb-0">
             <i class="bi bi-calendar3 me-1"></i>
             <span th:text="${#temporals.format(workout.startedAt, 'dd MMM yyyy')}"></span>
         </p>
@@ -124,11 +124,11 @@
     <section th:if="${sets != null and #lists.size(sets) > 0}">
         <h4 class="fw-semibold mb-2 text-center">Completed Sets</h4>
 
-        <div class="card-modern">
+        <div class="card-modern pt-1 pb-3">
             <table class="table table-striped table-borderless mb-0 text-center">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Set</th>
                     <th>Weight</th>
                     <th>Reps</th>
                 </tr>
